@@ -821,3 +821,119 @@ h1, h2, h3, h4 {
   .stage__slide[data-on='true'] img { transform: none; transition: none; }
   .stage__label > * { animation: none; }
 }
+
+/* ------------------------------------------------------------- studio mark */
+
+/* Mark column width and gutter, shared by the head grid and the body offset. */
+:root { --mark-col: 200px; --mark-gap: 44px; }
+
+.contact__head {
+  display: grid;
+  grid-template-columns: var(--mark-col) 1fr;
+  gap: var(--mark-gap);
+  align-items: start;
+  padding-block: 0 20px;
+}
+.contact__head .lede { max-width: 32ch; }
+
+/* Align body content to the title's left edge rather than the page gutter.
+   Offset the children, never .wide's own padding — that is the page gutter. */
+.contact__body > * {
+  max-width: 720px;
+  margin-left: calc(var(--mark-col) + var(--mark-gap));
+}
+.mark { display: block; }
+.mark img { width: 100%; height: auto; }
+
+@media (max-width: 900px) {
+  .contact__head { grid-template-columns: 1fr; gap: 20px; }
+  .contact__body > * { margin-left: 0; }
+  .mark img { width: clamp(120px, 30vw, 160px); }
+}
+
+.footer__mark {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding-bottom: 28px;
+}
+.footer__mark img { width: 104px; height: 104px; }
+
+@media (max-width: 640px) {
+  .footer__mark img { width: 76px; height: 76px; }
+}
+
+/* ---------------------------------------------------------- whatsapp form */
+
+.wa { display: block; }
+.wa__row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+@media (max-width: 620px) { .wa__row { grid-template-columns: 1fr; } }
+
+.wa__field { display: block; margin-top: 22px; }
+.wa__field > span {
+  display: block;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-bottom: 8px;
+}
+.wa__field input,
+.wa__field select,
+.wa__field textarea {
+  width: 100%;
+  font: inherit;
+  color: var(--ink);
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--rule);
+  border-radius: 0;
+  padding: 10px 0;
+  min-height: 44px;
+  transition: border-color 220ms var(--ease);
+  -webkit-appearance: none;
+  appearance: none;
+}
+.wa__field textarea { resize: vertical; line-height: 1.6; }
+.wa__field select {
+  background-image: linear-gradient(45deg, transparent 50%, var(--ink-mute) 50%),
+    linear-gradient(135deg, var(--ink-mute) 50%, transparent 50%);
+  background-position: right 6px center, right 1px center;
+  background-size: 5px 5px, 5px 5px;
+  background-repeat: no-repeat;
+}
+.wa__field input:focus,
+.wa__field select:focus,
+.wa__field textarea:focus {
+  outline: none;
+  border-bottom-color: var(--ink);
+}
+.wa__field input:focus-visible,
+.wa__field select:focus-visible,
+.wa__field textarea:focus-visible { outline: 1px solid var(--ink); outline-offset: 4px; }
+
+.wa__foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px 28px;
+  margin-top: 30px;
+}
+.wa__send {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 14px 22px;
+  min-height: 44px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  transition: opacity 220ms var(--ease);
+}
+.wa__send:hover { opacity: 0.82; }
+.wa__send[disabled] { opacity: 0.3; cursor: not-allowed; }
+
+.wa__note { margin: 0; font-size: 12px; color: var(--ink-mute); max-width: 44ch; }
+.wa__note a { border-bottom: 1px solid var(--rule); }
+.wa__ok { margin: 14px 0 0; font-size: 12px; color: var(--ink-soft); }

@@ -1,4 +1,5 @@
 import { Reveal, Seo } from '../components/bits';
+import WhatsAppForm from '../components/WhatsAppForm';
 import { contactGroups, site } from '../data/site';
 
 export default function Contact() {
@@ -9,18 +10,28 @@ export default function Contact() {
         description={`Mud Stories, ${site.address}. Write to ${site.email}.`}
       />
       <main id="main" className="page">
-        <div className="column section--tight">
+        {/* Mark sits at the page's left edge, title alongside it. */}
+        <div className="wide contact__head">
+          <Reveal className="mark">
+            <img src="/logo.png" alt="" width={512} height={512} decoding="async" />
+          </Reveal>
           <Reveal>
             <p className="meta">Get in touch</p>
-            <h1 className="display" style={{ marginTop: 16 }}>Contact</h1>
-            <p className="lede" style={{ marginTop: 30 }}>
+            <h1 className="display" style={{ margin: '10px 0 0' }}>Contact</h1>
+            <p className="lede" style={{ marginTop: 20 }}>
               Have a project in mind or a piece of land waiting to become something
               meaningful? We’d love to hear your story.
             </p>
           </Reveal>
         </div>
 
-        <section className="column section--tight groups">
+        <section className="wide contact__body section--tight">
+          <Reveal>
+            <WhatsAppForm />
+          </Reveal>
+        </section>
+
+        <section className="wide contact__body groups">
           {contactGroups.map((g) => (
             <Reveal key={g.label}>
               <h2>{g.label}</h2>
@@ -29,7 +40,7 @@ export default function Contact() {
           ))}
         </section>
 
-        <section className="column section--tight">
+        <section className="wide contact__body section--tight">
           <div className="two">
             <Reveal>
               <h2 className="meta">Studio</h2>

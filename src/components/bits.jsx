@@ -6,9 +6,13 @@ import { site } from '../data/site';
 export function Footer() {
   return (
     <footer className="footer">
+      <div className="wide footer__mark">
+        <img src="/logo.png" alt="" width={512} height={512} loading="lazy" decoding="async" />
+        <span className="meta">{site.strapline}</span>
+      </div>
       <div className="wide footer__in">
         <span>
-          © {new Date().getFullYear()} {site.name}. {site.strapline}
+          © {new Date().getFullYear()} {site.name}
         </span>
         <span>
           <a href={site.instagram} target="_blank" rel="noreferrer">

@@ -13,9 +13,19 @@ export const site = {
   address:
     'No. 74, First Floor, Shivganga Complex, 6th Cross Road, Domlur, Bengaluru 560071',
   hours: 'Monday – Saturday, 9:00 AM – 6:00 PM',
+  whatsapp: '919353739352', // country code + number, no spaces or +
   instagram: 'https://www.instagram.com/mud_stories_architects/',
   linkedin: 'https://www.linkedin.com/company/104136538/',
 };
+
+export const enquiryTypes = [
+  'A new house',
+  'Interiors',
+  'Landscape',
+  'Natural building consultation',
+  'A workshop',
+  'Something else',
+];
 
 export const contactGroups = [
   { label: 'Project enquiries', email: site.email },

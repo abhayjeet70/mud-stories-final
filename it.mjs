@@ -52,6 +52,35 @@ await p.locator('.track__btn--next').click();
 await p.waitForTimeout(900);
 const after = await p.evaluate(() => document.querySelector('.track').scrollLeft);
 if (after <= before) bad.push(`next arrow did not scroll track (${before} -> ${after})`);
+// Contact form must build a wa.me link and open it in a new tab.
+await p.goto(B + '/contact', { waitUntil: 'networkidle' });
+const sendBtn = p.locator('.wa__send');
+if (!(await sendBtn.isDisabled())) bad.push('send enabled before required fields filled');
+await p.fill('.wa__row .wa__field:first-child input', 'Asha');
+await p.fill('.wa textarea', 'We have a plot & want to build in mud.');
+if (await sendBtn.isDisabled()) bad.push('send still disabled after filling required fields');
+
+const [wa] = await Promise.all([
+  p.context().waitForEvent('page'),
+  sendBtn.click(),
+]);
+// wa.me redirects to api.whatsapp.com, so accept either host and read the
+// message out of the query rather than matching the raw string.
+const waUrl = new URL(wa.url());
+if (!/(^|\.)whatsapp\.com$|^wa\.me$/.test(waUrl.hostname))
+  bad.push('form opened wrong host: ' + waUrl.hostname);
+const num = waUrl.searchParams.get('phone') || waUrl.pathname.replace(/\//g, '');
+if (num !== '919353739352') bad.push('wrong whatsapp number: ' + num);
+const body = waUrl.searchParams.get('text') || '';
+if (!body.includes('Asha')) bad.push('name missing from whatsapp message');
+if (!body.includes('plot & want')) bad.push('message body truncated at the ampersand');
+if (!body.includes('A new house')) bad.push('enquiry type missing from message');
+await wa.close();
+
+// Big logo present on contact and in the footer.
+if (!(await p.locator('.mark img').isVisible())) bad.push('contact logo missing');
+if (!(await p.locator('.footer__mark img').count())) bad.push('footer logo missing');
+
 await p.close();
 
 // --- mobile ---
