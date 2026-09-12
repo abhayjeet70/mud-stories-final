@@ -13,6 +13,22 @@ await p.waitForTimeout(300);
 const items = await p.locator('.drop a').count();
 if (items !== 7) bad.push(`dropdown shows ${items} projects, expected 7`);
 
+// The panel must survive the pointer travelling from the trigger into the list,
+// and must still be open long enough to click a project.
+await p.mouse.move(1016, 45);
+await p.waitForTimeout(60);
+await p.mouse.move(1016, 120); // crosses the former dead gap
+await p.waitForTimeout(400);
+if (!(await p.locator('.drop').isVisible())) bad.push('dropdown closed while moving into it');
+const target = p.locator('.drop a').nth(3);
+await target.hover();
+await p.waitForTimeout(500);
+if (!(await p.locator('.drop').isVisible())) bad.push('dropdown closed while hovering a project');
+await target.click();
+await p.waitForTimeout(700);
+if (!p.url().includes('/work/mysore-residence'))
+  bad.push('dropdown selection did not navigate, url ' + p.url());
+
 await p.goto(B + '/work/thendral-ecr-farmhouse', { waitUntil: 'networkidle' });
 await p.waitForTimeout(600);
 await p.locator('.shot__zoom').first().click();
@@ -40,7 +56,16 @@ await p.close();
 
 // --- mobile ---
 p = await b.newPage({ viewport: { width: 390, height: 844 } });
+// Selected Work reel: advances and overlays the project name.
 await p.goto(B + '/work', { waitUntil: 'networkidle' });
+await p.waitForTimeout(500);
+const first = await p.locator('.stage__label h2').textContent();
+if (!first) bad.push('work reel has no project name overlay');
+await p.locator('.stage__arrow--next').click();
+await p.waitForTimeout(700);
+const counter = await p.locator('.stage__counter .meta').textContent();
+if (!/^02 \//.test(counter || '')) bad.push(`work reel did not advance, counter "${counter}"`);
+
 await p.locator('.burger').click();
 await p.waitForTimeout(300);
 if (!(await p.locator('.sheet').isVisible())) bad.push('mobile sheet did not open');

@@ -9,8 +9,17 @@ import Notes from './pages/Notes';
 import Contact from './pages/Contact';
 import NotFound from './pages/NotFound';
 
-/* The homepage is full-bleed and renders its own light header with no footer.
+/* Full-bleed slideshow routes carry a light header and no footer.
    Everything else shares the editorial white shell. */
+function Immersive({ children }) {
+  return (
+    <>
+      <Header light />
+      {children}
+    </>
+  );
+}
+
 function Editorial({ children }) {
   return (
     <div className="shell">
@@ -34,7 +43,7 @@ export default function App() {
       </a>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/work" element={wrap(<Work />)} />
+        <Route path="/work" element={<Immersive><Work /></Immersive>} />
         <Route path="/work/:slug" element={wrap(<Project />)} />
         <Route path="/studio" element={wrap(<Studio />)} />
         <Route path="/notes" element={wrap(<Notes />)} />

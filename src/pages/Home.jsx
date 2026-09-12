@@ -1,54 +1,15 @@
-import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Header from '../components/Header';
 import { Seo } from '../components/bits';
+import { useNoScroll, useSlideshow } from '../hooks/useSlideshow';
 import { projects } from '../data/projects';
 import { site } from '../data/site';
 
 const INTERVAL = 6000;
 
-const reduced = () =>
-  typeof window !== 'undefined' &&
-  window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
 export default function Home() {
-  const [i, setI] = useState(0);
-  const [held, setHeld] = useState(false); // user took control — stop autoplay
-  const touch = useRef(null);
-
-  const go = (n) => setI((n + projects.length) % projects.length);
-  const take = (n) => {
-    setHeld(true);
-    go(n);
-  };
-
-  // Autoplay. Pauses when the tab is hidden, on interaction, on reduced motion.
-  useEffect(() => {
-    if (held || reduced()) return;
-    const id = setInterval(() => {
-      if (!document.hidden) setI((v) => (v + 1) % projects.length);
-    }, INTERVAL);
-    return () => clearInterval(id);
-  }, [held]);
-
-  // Arrow keys.
-  useEffect(() => {
-    const onKey = (e) => {
-      if (e.key === 'ArrowLeft') take(i - 1);
-      if (e.key === 'ArrowRight') take(i + 1);
-    };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  }, [i]);
-
-  // The homepage is viewport-bound; no page scroll behind it.
-  useEffect(() => {
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-    return () => {
-      document.body.style.overflow = prev;
-    };
-  }, []);
+  const { index: i, take, swipe } = useSlideshow(projects.length, INTERVAL);
+  useNoScroll();
 
   const active = projects[i];
 
@@ -61,17 +22,7 @@ export default function Home() {
       />
       <Header light />
 
-      <main
-        id="main"
-        className="stage"
-        onTouchStart={(e) => (touch.current = e.touches[0].clientX)}
-        onTouchEnd={(e) => {
-          if (touch.current === null) return;
-          const d = e.changedTouches[0].clientX - touch.current;
-          if (Math.abs(d) > 45) take(d < 0 ? i + 1 : i - 1);
-          touch.current = null;
-        }}
-      >
+      <main id="main" className="stage" {...swipe}>
         <h1 className="sr">
           {site.name} — {site.strapline}
         </h1>

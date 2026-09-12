@@ -54,6 +54,14 @@ for (const s of SIZES) {
     });
     if (flush) problems.push(`${r} @${s.w} gutter lost -> ${flush}`);
 
+    // Slideshow routes must sit exactly in the viewport with no page scroll.
+    if (r === '/' || r === '/work') {
+      const over = await page.evaluate(
+        () => document.documentElement.scrollHeight - window.innerHeight
+      );
+      if (over > 1) problems.push(`${r} @${s.w} should not scroll, overflows ${over}px`);
+    }
+
     const trackBad = await page.evaluate(() => {
       const t = document.querySelector('.track');
       if (!t || getComputedStyle(t).display !== 'flex') return null;
@@ -63,6 +71,19 @@ for (const s of SIZES) {
       return null;
     });
     if (trackBad) problems.push(`${r} @${s.w} gallery track -> ${trackBad}`);
+
+    // Slideshow chrome must not sit on top of the project label.
+    const collide = await page.evaluate(() => {
+      const a = document.querySelector('.stage__label');
+      const b = document.querySelector('.stage__counter');
+      if (!a || !b) return null;
+      const r1 = a.getBoundingClientRect();
+      const r2 = b.getBoundingClientRect();
+      const hit =
+        r1.left < r2.right && r2.left < r1.right && r1.top < r2.bottom && r2.top < r1.bottom;
+      return hit ? 'label and counter overlap' : null;
+    });
+    if (collide) problems.push(`${r} @${s.w} ${collide}`);
 
     const name = 'qa/' + (r === '/' ? 'home' : r.replace(/\//g, '_')) + `-${s.w}.png`;
     await page.screenshot({ path: name, fullPage: false });

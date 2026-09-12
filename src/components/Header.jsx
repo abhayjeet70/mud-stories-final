@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { projects } from '../data/projects';
 import { site } from '../data/site';
@@ -17,7 +17,20 @@ export default function Header({ light = false }) {
   const [acc, setAcc] = useState(false); // mobile projects accordion
   const wrap = useRef(null);
   const trigger = useRef(null);
+  const shutTimer = useRef(null);
   const { pathname } = useLocation();
+
+  // Closing is deferred so a pointer crossing between the trigger and the panel
+  // — or briefly leaving and coming back — does not dismiss the menu.
+  const keepOpen = useCallback(() => {
+    clearTimeout(shutTimer.current);
+    setOpen(true);
+  }, []);
+  const shutSoon = useCallback(() => {
+    clearTimeout(shutTimer.current);
+    shutTimer.current = setTimeout(() => setOpen(false), 320);
+  }, []);
+  useEffect(() => () => clearTimeout(shutTimer.current), []);
 
   // Close everything on navigation.
   useEffect(() => {
@@ -66,25 +79,28 @@ export default function Header({ light = false }) {
           <div
             className="dropwrap"
             ref={wrap}
-            onMouseEnter={() => setOpen(true)}
-            onMouseLeave={() => setOpen(false)}
+            onMouseEnter={keepOpen}
+            onMouseLeave={shutSoon}
+            onFocus={keepOpen}
           >
             <button
               ref={trigger}
               aria-haspopup="true"
               aria-expanded={open}
-              onClick={() => setOpen((v) => !v)}
+              onClick={() => (open ? setOpen(false) : keepOpen())}
             >
               + Projects
             </button>
             {open && (
-              <div className="drop" role="menu" aria-label="Projects">
-                {projects.map((p) => (
-                  <Link key={p.slug} to={`/work/${p.slug}`} role="menuitem">
-                    {p.title}
-                    <span>{p.location}</span>
-                  </Link>
-                ))}
+              <div className="drop" onMouseEnter={keepOpen} onMouseLeave={shutSoon}>
+                <div className="drop__inner" role="menu" aria-label="Projects">
+                  {projects.map((p) => (
+                    <Link key={p.slug} to={`/work/${p.slug}`} role="menuitem">
+                      {p.title}
+                      <span>{p.location}</span>
+                    </Link>
+                  ))}
+                </div>
               </div>
             )}
           </div>

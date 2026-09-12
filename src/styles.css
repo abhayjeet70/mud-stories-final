@@ -186,8 +186,14 @@ h1, h2, h3, h4 {
 .dropwrap { position: relative; }
 .drop {
   position: absolute;
-  top: calc(100% + 14px);
+  top: 100%;
   right: 0;
+  /* Transparent padding bridges the trigger and the panel so the pointer never
+     crosses a gap that would dismiss the menu. */
+  padding-top: 14px;
+  animation: fade 150ms var(--ease);
+}
+.drop__inner {
   width: 232px;
   max-height: calc(100svh - var(--header-h) - 60px);
   overflow-y: auto;
@@ -195,7 +201,6 @@ h1, h2, h3, h4 {
   color: var(--ink);
   border: 1px solid var(--rule);
   padding: 6px 0;
-  animation: fade 150ms var(--ease);
 }
 .drop a {
   display: block;
@@ -344,6 +349,46 @@ h1, h2, h3, h4 {
 .stage__arrow--prev { left: 14px; }
 .stage__arrow--next { right: 14px; }
 
+.stage__counter {
+  position: absolute;
+  right: var(--gutter);
+  bottom: var(--gutter);
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  color: rgba(255, 255, 255, 0.8);
+}
+.stage__counter .meta { color: inherit; }
+.stage__bar {
+  display: block;
+  width: 120px;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.3);
+}
+.stage__bar i {
+  display: block;
+  height: 100%;
+  background: #fff;
+  transform-origin: left;
+  transition: transform 600ms var(--ease);
+}
+
+/* On narrow screens the bottom-left label fills the width, so the counter
+   moves up out of its way rather than sitting on top of it. */
+@media (max-width: 760px) {
+  .stage__counter {
+    top: calc(var(--header-h) - 30px);
+    bottom: auto;
+    gap: 10px;
+    /* Away from the bottom scrim it needs its own ground to stay readable. */
+    background: rgba(17, 15, 12, 0.6);
+    padding: 6px 12px;
+    color: #fff;
+  }
+  .stage__bar { width: 56px; }
+}
+
 .stage__ticks {
   position: absolute;
   right: var(--gutter);
@@ -362,44 +407,52 @@ h1, h2, h3, h4 {
 .stage__ticks button[aria-current='true'] { background: #fff; background-clip: content-box; }
 
 @media (max-width: 900px) {
-  .stage__ticks { display: none; }
+  .stage__counter {
+  position: absolute;
+  right: var(--gutter);
+  bottom: var(--gutter);
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  color: rgba(255, 255, 255, 0.8);
+}
+.stage__counter .meta { color: inherit; }
+.stage__bar {
+  display: block;
+  width: 120px;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.3);
+}
+.stage__bar i {
+  display: block;
+  height: 100%;
+  background: #fff;
+  transform-origin: left;
+  transition: transform 600ms var(--ease);
+}
+
+/* On narrow screens the bottom-left label fills the width, so the counter
+   moves up out of its way rather than sitting on top of it. */
+@media (max-width: 760px) {
+  .stage__counter {
+    top: calc(var(--header-h) - 30px);
+    bottom: auto;
+    gap: 10px;
+    /* Away from the bottom scrim it needs its own ground to stay readable. */
+    background: rgba(17, 15, 12, 0.6);
+    padding: 6px 12px;
+    color: #fff;
+  }
+  .stage__bar { width: 56px; }
+}
+
+.stage__ticks { display: none; }
   .stage__label { bottom: 30px; }
   .stage__arrow { width: 38px; height: 38px; }
 }
 
 /* ------------------------------------------------------------- index / work */
-
-/* ------------------------------------------------------------ project grid */
-
-.grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 46px 30px;
-}
-.tile .ph { width: 100%; }
-
-.tile__foot {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 6px 24px;
-  margin-top: 16px;
-  padding-top: 14px;
-  border-top: 1px solid var(--rule);
-}
-.tile h2 {
-  font-size: clamp(1.4rem, 2.4vw, 2.1rem);
-  font-weight: 300;
-  transition: opacity 250ms var(--ease);
-}
-.tile a:hover h2 { opacity: 0.55; }
-.tile .ph img { transition: transform 900ms var(--ease), opacity 900ms var(--ease), filter 900ms var(--ease); }
-.tile a:hover .ph[data-ready='true'] img { transform: scale(1.03); }
-
-@media (max-width: 860px) {
-  .grid { grid-template-columns: 1fr; gap: 40px; }
-}
 
 /* ------------------------------------------------------- project detail page */
 
