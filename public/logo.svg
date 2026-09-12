@@ -1,0 +1,103 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="100%" height="100%">
+  <defs>
+    <!-- Background Gradients to mimic watercolor textures -->
+    <radialGradient id="canopyGrad" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#E1DAB1" stop-opacity="0.95"/>
+      <stop offset="35%" stop-color="#B2C99B" stop-opacity="0.9"/>
+      <stop offset="70%" stop-color="#7EA682" stop-opacity="0.85"/>
+      <stop offset="90%" stop-color="#558C89" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#3F6B5C" stop-opacity="0.6"/>
+    </radialGradient>
+    
+    <radialGradient id="skyGrad" cx="30%" cy="30%" r="70%">
+      <stop offset="0%" stop-color="#8BBAC9" stop-opacity="0.55"/>
+      <stop offset="50%" stop-color="#A5C7A9" stop-opacity="0.45"/>
+      <stop offset="100%" stop-color="#729377" stop-opacity="0"/>
+    </radialGradient>
+
+    <radialGradient id="warmGrad" cx="70%" cy="60%" r="60%">
+      <stop offset="0%" stop-color="#EED8A1" stop-opacity="0.65"/>
+      <stop offset="60%" stop-color="#C5D39E" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#A4C4A0" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Filter for soft organic watercolor rough edges -->
+    <filter id="watercolor-edge" x="-10%" y="-10%" width="120%" height="120%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="4" result="noise"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="18" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </defs>
+
+  <!-- Circular Watercolor Canopy Layer with organic displacement edge -->
+  <g filter="url(#watercolor-edge)">
+    <!-- Base organic shape -->
+    <path d="M 250 50 
+             C 330 45, 410 90, 440 170 
+             C 470 250, 435 340, 380 400 
+             C 320 460, 210 470, 140 430 
+             C 70 390, 40 300, 55 210 
+             C 70 120, 170 55, 250 50 Z" 
+          fill="url(#canopyGrad)" />
+          
+    <!-- Secondary color wash (blue-green) -->
+    <path d="M 230 80 
+             C 300 70, 390 110, 410 180 
+             C 430 250, 380 320, 340 370 
+             C 290 420, 190 430, 130 380 
+             C 70 330, 65 240, 90 170 
+             C 115 100, 170 90, 230 80 Z" 
+          fill="url(#skyGrad)" />
+
+    <!-- Tertiary color wash (warm earthy yellow-green) -->
+    <path d="M 270 100 
+             C 340 110, 380 180, 360 250 
+             C 340 320, 290 380, 220 390 
+             C 150 400, 110 330, 115 250 
+             C 120 170, 200 90, 270 100 Z" 
+          fill="url(#warmGrad)" />
+  </g>
+
+  <!-- Elegant organic brown branch structure -->
+  <g stroke="#503724" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <!-- Main Center Node / Core trunk junctions -->
+    
+    <!-- Branch 1: Top Branch -->
+    <path d="M 250 250 C 252 220, 258 170, 252 130" stroke-width="12" />
+    <path d="M 252 130 C 250 110, 244 80, 241 68" stroke-width="8" />
+    <path d="M 252 130 C 265 115, 280 100, 292 90" stroke-width="6" />
+    <path d="M 241 68 C 235 55, 225 45, 223 41" stroke-width="4" />
+    <path d="M 241 68 C 248 58, 255 50, 258 46" stroke-width="4" />
+    <path d="M 252 130 C 238 115, 225 105, 215 98" stroke-width="6" />
+
+    <!-- Branch 2: Top Right Branch -->
+    <path d="M 250 250 C 280 230, 330 200, 370 185" stroke-width="11" />
+    <path d="M 370 185 C 390 175, 420 168, 435 163" stroke-width="7" />
+    <path d="M 370 185 C 385 165, 405 150, 415 142" stroke-width="5" />
+    <path d="M 330 207 C 342 190, 355 178, 362 173" stroke-width="6" />
+    <path d="M 370 185 C 358 198, 345 210, 340 215" stroke-width="5" />
+
+    <!-- Branch 3: Bottom Right Branch -->
+    <path d="M 250 250 C 275 275, 315 315, 345 350" stroke-width="11" />
+    <path d="M 345 350 C 365 370, 385 395, 395 408" stroke-width="7" />
+    <path d="M 345 350 C 360 335, 380 320, 392 312" stroke-width="5" />
+    <path d="M 305 305 C 322 295, 338 285, 348 278" stroke-width="6" />
+    <path d="M 345 350 C 330 365, 315 380, 308 388" stroke-width="5" />
+
+    <!-- Branch 4: Bottom Left Branch -->
+    <path d="M 250 250 C 220 270, 180 310, 155 355" stroke-width="11" />
+    <path d="M 155 355 C 140 380, 128 410, 122 425" stroke-width="7" />
+    <path d="M 155 355 C 138 348, 118 340, 108 335" stroke-width="5" />
+    <path d="M 188 300 C 172 295, 155 290, 145 288" stroke-width="6" />
+    <path d="M 155 355 C 165 375, 172 395, 176 405" stroke-width="5" />
+
+    <!-- Branch 5: Top Left Branch -->
+    <path d="M 250 250 C 215 235, 175 215, 135 190" stroke-width="11" />
+    <path d="M 135 190 C 115 178, 85 160, 72 152" stroke-width="7" />
+    <path d="M 135 190 C 122 170, 110 152, 102 142" stroke-width="5" />
+    <path d="M 175 223 C 160 205, 145 192, 138 185" stroke-width="6" />
+    <path d="M 135 190 C 142 208, 148 222, 150 228" stroke-width="5" />
+    
+    <!-- Central trunk nodes definition -->
+    <path d="M 248 245 C 252 245, 252 255, 248 255 Z" stroke-width="14" />
+  </g>
+</svg>
