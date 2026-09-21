@@ -59,10 +59,39 @@ if (!(await sendBtn.isDisabled())) bad.push('send enabled before required fields
 await p.fill('.wa__row .wa__field:first-child input', 'Asha');
 await p.fill('.wa textarea', 'We have a plot & want to build in mud.');
 // Pick a non-default option so the dropdown is exercised, not just defaulted.
-await p.selectOption('.wa select', { label: 'Workshops' });
-const chosen = await p.locator('.wa select').inputValue();
-const optionCount = await p.locator('.wa select option').count();
+// Custom enquiry dropdown: pointer, then the keyboard paths a native
+// <select> would have given for free.
+await p.locator('.dd__trigger').click();
+await p.waitForTimeout(250);
+const optionCount = await p.locator('.dd__list li').count();
 if (optionCount !== 4) bad.push(`enquiry dropdown has ${optionCount} options, expected 4`);
+await p.locator('.dd__list li', { hasText: 'Career' }).click();
+await p.waitForTimeout(200);
+if ((await p.locator('.dd__trigger span').first().textContent()) !== 'Career')
+  bad.push('clicking an option did not set the value');
+
+// Keyboard: open, arrow down, commit.
+await p.locator('.dd__trigger').focus();
+await p.keyboard.press('Enter');
+await p.waitForTimeout(200);
+if (!(await p.locator('.dd__list').isVisible())) bad.push('Enter did not open the dropdown');
+await p.keyboard.press('ArrowDown');
+await p.keyboard.press('Enter');
+await p.waitForTimeout(200);
+if (await p.locator('.dd__list').count()) bad.push('Enter did not close the dropdown');
+const afterKeys = await p.locator('.dd__trigger span').first().textContent();
+if (afterKeys === 'Career') bad.push('arrow key did not move the selection');
+
+// Escape cancels and restores focus to the trigger.
+await p.keyboard.press('Enter');
+await p.waitForTimeout(200);
+await p.keyboard.press('Escape');
+await p.waitForTimeout(200);
+if (await p.locator('.dd__list').count()) bad.push('Escape did not close the dropdown');
+if (!(await p.evaluate(() => document.activeElement?.classList.contains('dd__trigger'))))
+  bad.push('focus not restored to trigger after Escape');
+
+const chosen = await p.locator('.dd__trigger span').first().textContent();
 if (await sendBtn.isDisabled()) bad.push('send still disabled after filling required fields');
 
 const [wa] = await Promise.all([
@@ -83,8 +112,14 @@ if (!body.includes(chosen)) bad.push(`enquiry type "${chosen}" missing from mess
 await wa.close();
 
 // Big logo present on contact and in the footer.
-if (!(await p.locator('.mark img').isVisible())) bad.push('contact logo missing');
-if (!(await p.locator('.footer__mark img').count())) bad.push('footer logo missing');
+// The marks must actually decode, not merely be present in the DOM.
+for (const [sel, where] of [['.mark img', 'contact'], ['.footer__mark img', 'footer']]) {
+  const el = p.locator(sel).first();
+  await el.scrollIntoViewIfNeeded();
+  await p.waitForTimeout(400);
+  const ok = await el.evaluate((i) => i.complete && i.naturalWidth > 0);
+  if (!ok) bad.push(`${where} logo failed to load (${await el.getAttribute('src')})`);
+}
 
 await p.close();
 

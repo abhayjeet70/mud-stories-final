@@ -7,7 +7,14 @@ export function Footer() {
   return (
     <footer className="footer">
       <div className="wide footer__mark">
-        <img src="/logo.png" alt="" width={512} height={512} loading="lazy" decoding="async" />
+        <img
+          src="/logo.webp"
+          alt="Mud Stories"
+          width={420}
+          height={408}
+          loading="lazy"
+          decoding="async"
+        />
         <span className="meta">{site.strapline}</span>
       </div>
       <div className="wide footer__in">

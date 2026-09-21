@@ -942,3 +942,73 @@ h1, h2, h3, h4 {
 .wa__note { margin: 0; font-size: 12px; color: var(--ink-mute); max-width: 44ch; }
 .wa__note a { border-bottom: 1px solid var(--rule); }
 .wa__ok { margin: 14px 0 0; font-size: 12px; color: var(--ink-soft); }
+
+/* ------------------------------------------------------- dropdown (listbox) */
+/* Shares the Projects menu's panel language: square, thin rule, no shadow. */
+
+.dd { position: relative; }
+.dd__label {
+  display: block;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-bottom: 8px;
+}
+.dd__trigger {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  text-align: left;
+  padding: 10px 0;
+  min-height: 44px;
+  border-bottom: 1px solid var(--rule);
+  transition: border-color 220ms var(--ease);
+}
+.dd__trigger:hover,
+.dd__trigger[aria-expanded='true'] { border-bottom-color: var(--ink); }
+
+.dd__caret {
+  width: 7px;
+  height: 7px;
+  border-right: 1px solid var(--ink-mute);
+  border-bottom: 1px solid var(--ink-mute);
+  transform: rotate(45deg) translate(-2px, -2px);
+  transition: transform 220ms var(--ease);
+  flex: none;
+}
+.dd__trigger[aria-expanded='true'] .dd__caret {
+  transform: rotate(-135deg) translate(-2px, -2px);
+}
+
+.dd__list {
+  position: absolute;
+  z-index: 30;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  margin: 0;
+  padding: 6px 0;
+  list-style: none;
+  background: var(--panel);
+  border: 1px solid var(--rule);
+  max-height: 260px;
+  overflow-y: auto;
+  animation: fade 150ms var(--ease);
+}
+.dd__list li {
+  padding: 10px 16px;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  outline: none;
+}
+.dd__list li[data-active='true'] { background: var(--panel-deep); }
+.dd__list li[aria-selected='true'] { font-weight: 500; }
+.dd__list li[aria-selected='true']::after {
+  content: ' ·';
+  color: var(--ink-mute);
+}

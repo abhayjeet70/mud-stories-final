@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import Dropdown from './Dropdown';
 import { enquiryTypes, site } from '../data/site';
 
 /* Composes the message and hands it to WhatsApp. There is no server and no
@@ -54,14 +55,15 @@ export default function WhatsAppForm() {
         </label>
       </div>
 
-      <label className="wa__field">
-        <span>What is it about</span>
-        <select value={f.about} onChange={set('about')}>
-          {enquiryTypes.map((t) => (
-            <option key={t}>{t}</option>
-          ))}
-        </select>
-      </label>
+      <div className="wa__field">
+        <Dropdown
+          name="about"
+          label="What is it about"
+          options={enquiryTypes}
+          value={f.about}
+          onChange={(v) => setF((prev) => ({ ...prev, about: v }))}
+        />
+      </div>
 
       <label className="wa__field">
         <span>Your message</span>

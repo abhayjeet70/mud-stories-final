@@ -13,7 +13,7 @@ export default function Contact() {
         {/* Mark sits at the page's left edge, title alongside it. */}
         <div className="wide contact__head">
           <Reveal className="mark">
-            <img src="/logo.png" alt="" width={512} height={512} decoding="async" />
+            <img src="/logo.webp" alt="Mud Stories" width={420} height={408} decoding="async" />
           </Reveal>
           <Reveal>
             <p className="meta">Get in touch</p>
