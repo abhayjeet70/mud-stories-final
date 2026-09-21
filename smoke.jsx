@@ -6,8 +6,8 @@ import { renderToString } from 'react-dom/server';
 import { MemoryRouter } from 'react-router-dom';
 import App from './src/App.jsx';
 import { projects } from './src/data/projects.js';
-import { buildMessage, whatsappLink } from './src/components/WhatsAppForm.jsx';
-import { enquiryTypes } from './src/data/site.js';
+import { enquiryPages } from './src/data/enquiries.js';
+import { composeEnquiry, enquiryLink } from './src/components/EnquiryForm.jsx';
 
 const render = (url) =>
   renderToString(
@@ -19,6 +19,7 @@ const render = (url) =>
 const routes = [
   '/', '/work', '/studio', '/notes', '/contact', '/nope',
   ...projects.map((p) => `/work/${p.slug}`),
+  ...enquiryPages.map((p) => `/contact/${p.slug}`),
 ];
 
 for (const r of routes) {
@@ -37,38 +38,52 @@ for (const s of ['mudstories.crafted@gmail.com', '+91 93537 39352', 'Domlur']) {
   assert.ok(contact.includes(s), `contact missing ${s}`);
 }
 
-// WhatsApp link: correct number, and the fields must survive encoding.
-{
-  const fields = {
-    name: '  Asha  ',
-    place: 'Bengaluru',
-    about: enquiryTypes[0],
-    message: ['We have a 40x60 plot & want to build in mud.', 'Can we talk?'].join(String.fromCharCode(10)),
-  };
-  const msg = buildMessage(fields);
-  assert.ok(msg.startsWith("Hello Mud Stories, I'm Asha."), 'name not trimmed into greeting');
-  assert.ok(msg.includes(enquiryTypes[0]), 'enquiry type missing');
-  assert.ok(msg.includes('Bengaluru'), 'location missing');
-  assert.ok(msg.includes('40x60 plot & want'), 'message body missing');
+// Each enquiry page must render its own title and form, and compose a
+// message carrying every answered field.
+for (const page of enquiryPages) {
+  const html = render(`/contact/${page.slug}`);
+  assert.ok(html.includes(page.title), `${page.slug} missing its title`);
+  assert.ok(html.includes(page.formTitle), `${page.slug} missing its form`);
 
-  const url = whatsappLink(fields);
-  assert.ok(url.startsWith('https://wa.me/919353739352?text='), `wrong wa.me target: ${url}`);
-  assert.ok(!/\s/.test(url), 'url contains unencoded whitespace');
-  assert.ok(url.includes('%26'), 'ampersand not encoded — would truncate the message');
-  const decoded = decodeURIComponent(url.split('?text=')[1]);
-  assert.strictEqual(decoded, msg, 'round-trip through the URL lost content');
-
-  // Optional location omitted entirely rather than left blank.
-  assert.ok(
-    !buildMessage({ ...fields, place: '   ' }).includes('Site / location'),
-    'blank location should be dropped'
+  const values = Object.fromEntries(
+    page.fields.map((f) => [
+      f.name,
+      f.type === 'select' ? f.options[1] || f.options[0] : `v-${f.name}`,
+    ])
   );
+  const msg = composeEnquiry(page, values);
+  for (const f of page.fields) {
+    if (f.type === 'file') continue;
+    assert.ok(
+      msg.includes(String(values[f.name])),
+      `${page.slug}: field "${f.name}" lost from the composed message`
+    );
+  }
+
+  const url = enquiryLink(page, values);
+  const expected = page.channel === 'email' ? 'mailto:' : 'https://wa.me/';
+  assert.ok(url.startsWith(expected), `${page.slug} should deliver via ${page.channel}`);
+  assert.ok(!/\s/.test(url), `${page.slug} url has unencoded whitespace`);
 }
 
-// Every dropdown option must survive into the message it builds.
-for (const about of enquiryTypes) {
-  const msg = buildMessage({ name: 'A', place: '', about, message: 'hi' });
-  assert.ok(msg.includes(about), `enquiry option "${about}" lost from message`);
+// The careers route is the only one needing an attachment, so it must use email
+// (a mailto cannot carry a file, but WhatsApp web cannot either — and email at
+// least lets the applicant attach one to the draft).
+const careers = enquiryPages.find((p) => p.slug === 'careers');
+assert.strictEqual(careers.channel, 'email', 'careers must deliver by email');
+assert.ok(
+  careers.fields.some((f) => f.type === 'file'),
+  'careers form must offer a CV field'
+);
+// A named attachment is called out in the message so it is not forgotten.
+assert.ok(
+  composeEnquiry(careers, { name: 'A', cv__filename: 'asha-cv.pdf' }).includes('asha-cv.pdf'),
+  'attachment filename missing from careers message'
+);
+
+// Every nav menu target must be a real route.
+for (const page of enquiryPages) {
+  assert.ok(render(`/contact/${page.slug}`).length > 500, `/contact/${page.slug} did not render`);
 }
 
 // Text tones must clear WCAG AA against the earth ground they sit on.

@@ -1,7 +1,10 @@
+import { Link } from 'react-router-dom';
 import { Reveal, Seo } from '../components/bits';
-import WhatsAppForm from '../components/WhatsAppForm';
+import { enquiryPages } from '../data/enquiries';
 import { contactGroups, site } from '../data/site';
 
+/* The contact hub. It routes to the four dedicated enquiry pages rather than
+   carrying a form of its own — each route has a form suited to it. */
 export default function Contact() {
   return (
     <>
@@ -10,7 +13,6 @@ export default function Contact() {
         description={`Mud Stories, ${site.address}. Write to ${site.email}.`}
       />
       <main id="main" className="page">
-        {/* Mark sits at the page's left edge, title alongside it. */}
         <div className="wide contact__head">
           <Reveal className="mark">
             <img src="/logo.webp" alt="Mud Stories" width={420} height={408} decoding="async" />
@@ -25,10 +27,21 @@ export default function Contact() {
           </Reveal>
         </div>
 
-        <section className="wide contact__body section--tight">
+        <section className="wide section--tight">
           <Reveal>
-            <WhatsAppForm />
+            <p className="meta">What is it about</p>
           </Reveal>
+          <div className="routes">
+            {enquiryPages.map((p, n) => (
+              <Reveal as="article" key={p.slug}>
+                <Link to={`/contact/${p.slug}`}>
+                  <span className="meta">{String(n + 1).padStart(2, '0')}</span>
+                  <h2>{p.nav}</h2>
+                  <p>{p.navNote}</p>
+                </Link>
+              </Reveal>
+            ))}
+          </div>
         </section>
 
         <section className="wide contact__body groups">

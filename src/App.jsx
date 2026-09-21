@@ -7,6 +7,7 @@ import Project from './pages/Project';
 import Studio from './pages/Studio';
 import Notes from './pages/Notes';
 import Contact from './pages/Contact';
+import Enquiry from './pages/Enquiry';
 import NotFound from './pages/NotFound';
 
 /* Full-bleed slideshow routes carry a light header and no footer.
@@ -48,6 +49,7 @@ export default function App() {
         <Route path="/studio" element={wrap(<Studio />)} />
         <Route path="/notes" element={wrap(<Notes />)} />
         <Route path="/contact" element={wrap(<Contact />)} />
+        <Route path="/contact/:slug" element={wrap(<Enquiry />)} />
         <Route path="*" element={wrap(<NotFound />)} />
       </Routes>
     </>

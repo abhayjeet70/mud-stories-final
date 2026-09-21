@@ -65,56 +65,93 @@ const cItems = p.locator('.dropwrap').last().locator('.drop a');
 const cCount = await cItems.count();
 if (cCount !== 4) bad.push(`contact menu has ${cCount} items, expected 4`);
 await cItems.filter({ hasText: 'Career' }).first().click();
-await p.waitForTimeout(700);
-if (!p.url().includes('/contact')) bad.push('contact menu item did not navigate');
-const preset = (await p.locator('.dd__trigger span').first().textContent())?.trim();
-if (preset !== 'Career') bad.push(`enquiry not preselected from menu, got "${preset}"`);
+await p.waitForTimeout(800);
+if (!p.url().includes('/contact/careers')) bad.push('contact menu did not open the careers page');
+if (!(await p.locator('h1').first().textContent())?.includes('Work with us'))
+  bad.push('careers page missing its heading');
 
-// A bogus ?about must fall back rather than be trusted.
-await p.goto(B + '/contact?about=%3Cscript%3E', { waitUntil: 'networkidle' });
-const fallback = (await p.locator('.dd__trigger span').first().textContent())?.trim();
-if (fallback !== 'Workshops') bad.push(`bad ?about not rejected, got "${fallback}"`);
+// Careers: CV field rejects the wrong type, accepts a PDF, and the application
+// goes out by email because an attachment cannot be transmitted otherwise.
+const send = p.locator('.wa__send');
+if (!(await send.textContent())?.includes('email'))
+  bad.push('careers should submit by email');
+await p.setInputFiles('.wa__file', {
+  name: 'notes.txt', mimeType: 'text/plain', buffer: Buffer.from('nope'),
+});
+await p.waitForTimeout(250);
+if (!(await p.locator('.wa__err').count())) bad.push('CV field accepted a .txt file');
+await p.setInputFiles('.wa__file', {
+  name: 'asha-cv.pdf', mimeType: 'application/pdf', buffer: Buffer.from('%PDF-1.4'),
+});
+await p.waitForTimeout(250);
+if (await p.locator('.wa__err').count()) bad.push('CV field rejected a valid PDF');
+if (!(await p.locator('.wa__hint').textContent())?.includes('asha-cv.pdf'))
+  bad.push('chosen CV filename not shown back');
 
-// Contact form must build a wa.me link and open it in a new tab.
-await p.goto(B + '/contact', { waitUntil: 'networkidle' });
+// Required fields gate submission.
+if (!(await send.isDisabled())) bad.push('careers send enabled before required fields');
+await p.fill('#f-name', 'Asha');
+await p.fill('#f-email', 'asha@example.com');
+await p.fill('#f-phone', '9999999999');
+await p.fill('#f-message', 'I want to learn to build with earth & lime.');
+await p.waitForTimeout(250);
+if (await send.isDisabled()) bad.push('careers send still disabled after required fields');
+
+// Each enquiry page renders its own form.
+for (const [slug, heading] of [
+  ['project', 'Start a project'],
+  ['workshops', 'Join a workshop'],
+  ['general', 'Say hello'],
+]) {
+  await p.goto(`${B}/contact/${slug}`, { waitUntil: 'networkidle' });
+  const h = (await p.locator('h1').first().textContent())?.trim();
+  if (h !== heading) bad.push(`/contact/${slug} heading is "${h}", expected "${heading}"`);
+  if (!(await p.locator('.wa').count())) bad.push(`/contact/${slug} has no form`);
+}
+
+// Project enquiry builds a wa.me link and opens it in a new tab.
+await p.goto(B + '/contact/project', { waitUntil: 'networkidle' });
 const sendBtn = p.locator('.wa__send');
 if (!(await sendBtn.isDisabled())) bad.push('send enabled before required fields filled');
-await p.fill('.wa__row .wa__field:first-child input', 'Asha');
-await p.fill('.wa textarea', 'We have a plot & want to build in mud.');
-// Pick a non-default option so the dropdown is exercised, not just defaulted.
-// Custom enquiry dropdown: pointer, then the keyboard paths a native
-// <select> would have given for free.
-await p.locator('.dd__trigger').click();
+await p.fill('#f-name', 'Asha');
+await p.fill('#f-email', 'asha@example.com');
+await p.fill('#f-location', 'Bengaluru');
+await p.fill('#f-message', 'We have a plot & want to build in mud.');
+// The first dropdown on this form is "What you need". Exercise the pointer
+// path, then the keyboard paths a native <select> would have given for free.
+const dd = p.locator('.dd').first();
+const ddTrigger = dd.locator('.dd__trigger');
+await ddTrigger.click();
 await p.waitForTimeout(250);
-const optionCount = await p.locator('.dd__list li').count();
-if (optionCount !== 4) bad.push(`enquiry dropdown has ${optionCount} options, expected 4`);
-await p.locator('.dd__list li', { hasText: 'Career' }).click();
+const optionCount = await dd.locator('.dd__list li').count();
+if (optionCount !== 5) bad.push(`scope dropdown has ${optionCount} options, expected 5`);
+await dd.locator('.dd__list li', { hasText: 'Interior design' }).click();
 await p.waitForTimeout(200);
-if ((await p.locator('.dd__trigger span').first().textContent()) !== 'Career')
+if ((await ddTrigger.locator('span').first().textContent()) !== 'Interior design')
   bad.push('clicking an option did not set the value');
 
 // Keyboard: open, arrow down, commit.
-await p.locator('.dd__trigger').focus();
+await ddTrigger.focus();
 await p.keyboard.press('Enter');
 await p.waitForTimeout(200);
-if (!(await p.locator('.dd__list').isVisible())) bad.push('Enter did not open the dropdown');
+if (!(await dd.locator('.dd__list').isVisible())) bad.push('Enter did not open the dropdown');
 await p.keyboard.press('ArrowDown');
 await p.keyboard.press('Enter');
 await p.waitForTimeout(200);
-if (await p.locator('.dd__list').count()) bad.push('Enter did not close the dropdown');
-const afterKeys = await p.locator('.dd__trigger span').first().textContent();
-if (afterKeys === 'Career') bad.push('arrow key did not move the selection');
+if (await dd.locator('.dd__list').count()) bad.push('Enter did not close the dropdown');
+if ((await ddTrigger.locator('span').first().textContent()) === 'Interior design')
+  bad.push('arrow key did not move the selection');
 
 // Escape cancels and restores focus to the trigger.
 await p.keyboard.press('Enter');
 await p.waitForTimeout(200);
 await p.keyboard.press('Escape');
 await p.waitForTimeout(200);
-if (await p.locator('.dd__list').count()) bad.push('Escape did not close the dropdown');
+if (await dd.locator('.dd__list').count()) bad.push('Escape did not close the dropdown');
 if (!(await p.evaluate(() => document.activeElement?.classList.contains('dd__trigger'))))
   bad.push('focus not restored to trigger after Escape');
 
-const chosen = await p.locator('.dd__trigger span').first().textContent();
+const chosen = await ddTrigger.locator('span').first().textContent();
 if (await sendBtn.isDisabled()) bad.push('send still disabled after filling required fields');
 
 const [wa] = await Promise.all([
@@ -135,6 +172,8 @@ if (!body.includes(chosen)) bad.push(`enquiry type "${chosen}" missing from mess
 await wa.close();
 
 // Big logo present on contact and in the footer.
+// The marks live on the contact hub, not the enquiry pages.
+await p.goto(B + '/contact', { waitUntil: 'networkidle' });
 // The marks must actually decode, not merely be present in the DOM.
 for (const [sel, where] of [['.mark img', 'contact'], ['.footer__mark img', 'footer']]) {
   const el = p.locator(sel).first();

@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { projects } from '../data/projects';
-import { contactMenu, site } from '../data/site';
+import { site } from '../data/site';
+import { enquiryPages } from '../data/enquiries';
 
 const LINKS = [
   { to: '/work', label: 'Work' },
@@ -15,10 +16,10 @@ const projectItems = projects.map((p) => ({
   note: p.location,
 }));
 
-const contactItems = contactMenu.map((c) => ({
-  to: `/contact?about=${encodeURIComponent(c.type)}`,
-  title: c.type,
-  note: c.note,
+const contactItems = enquiryPages.map((p) => ({
+  to: `/contact/${p.slug}`,
+  title: p.nav,
+  note: p.navNote,
 }));
 
 /* One folder-style nav menu, used by both + Projects and + Contact.
@@ -146,7 +147,7 @@ export default function Header({ light = false }) {
               {l.label}
             </NavLink>
           ))}
-          <NavMenu label="Contact" items={contactItems} current={pathname === '/contact'} />
+          <NavMenu label="Contact" items={contactItems} current={pathname.startsWith('/contact')} />
         </nav>
 
         <button className="burger" onClick={() => setSheet(true)} aria-expanded={sheet}>

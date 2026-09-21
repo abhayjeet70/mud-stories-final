@@ -3,7 +3,10 @@
 import { chromium } from 'playwright';
 import { mkdirSync } from 'node:fs';
 
-const ROUTES = ['/', '/work', '/work/thendral-ecr-farmhouse', '/studio', '/notes', '/contact'];
+const ROUTES = [
+  '/', '/work', '/work/thendral-ecr-farmhouse', '/studio', '/notes', '/contact',
+  '/contact/project', '/contact/workshops', '/contact/careers', '/contact/general',
+];
 const SIZES = [{ w: 1440, h: 900 }, { w: 390, h: 844 }];
 const BASE = 'http://localhost:4321';
 
