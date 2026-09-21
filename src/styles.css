@@ -5,11 +5,16 @@
    ========================================================================== */
 
 :root {
-  --paper: #fbfaf8;
-  --ink: #1c1a17;
-  --ink-soft: #3a3631;
-  --ink-mute: #8a8177;
-  --rule: #e2ddd5;
+  /* Earth ground. Tones taken from the material palette the studio builds in —
+     rammed earth and lime rather than gallery white. Text tones are chosen to
+     clear WCAG AA against --paper (see the contrast check in smoke.jsx). */
+  --paper: #e3d7c4;      /* page ground */
+  --panel: #ede4d6;      /* raised surfaces: menus, image placeholders */
+  --panel-deep: #d8c9b2; /* recessed: image wells, hover */
+  --ink: #241e19;
+  --ink-soft: #453b31;
+  --ink-mute: #665849;
+  --rule: #c6b69e;
   --clay: #9a6a4a;
   --black: #111111;
 
@@ -197,7 +202,7 @@ h1, h2, h3, h4 {
   width: 232px;
   max-height: calc(100svh - var(--header-h) - 60px);
   overflow-y: auto;
-  background: #fff;
+  background: var(--panel);
   color: var(--ink);
   border: 1px solid var(--rule);
   padding: 6px 0;
@@ -211,7 +216,7 @@ h1, h2, h3, h4 {
   border: 0;
   line-height: 1.4;
 }
-.drop a:hover { background: #f3f0eb; border: 0; }
+.drop a:hover { background: var(--panel-deep); border: 0; }
 .drop a span { display: block; font-family: var(--mono); font-size: 9px; letter-spacing: 0.14em; color: var(--ink-mute); margin-top: 2px; text-transform: uppercase; }
 
 @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
@@ -484,7 +489,7 @@ h1, h2, h3, h4 {
 .track::-webkit-scrollbar { display: none; }
 
 .shot { flex: 0 0 auto; max-width: 92vw; }
-.shot__frame { position: relative; height: 500px; background: #efebe4; }
+.shot__frame { position: relative; height: 500px; background: var(--panel-deep); }
 .shot__frame img { height: 100%; width: auto; object-fit: cover; }
 .shot figcaption {
   margin-top: 12px;
@@ -676,13 +681,13 @@ h1, h2, h3, h4 {
 .ph {
   position: relative;
   overflow: hidden;
-  background: #e8e2d9;
+  background: var(--panel-deep);
 }
 .ph::after {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(100deg, #e8e2d9 20%, #f2ede6 40%, #e8e2d9 60%);
+  background: linear-gradient(100deg, var(--panel-deep) 20%, var(--panel) 40%, var(--panel-deep) 60%);
   background-size: 240% 100%;
   animation: sweep 1.5s linear infinite;
   opacity: 1;

@@ -58,6 +58,11 @@ const sendBtn = p.locator('.wa__send');
 if (!(await sendBtn.isDisabled())) bad.push('send enabled before required fields filled');
 await p.fill('.wa__row .wa__field:first-child input', 'Asha');
 await p.fill('.wa textarea', 'We have a plot & want to build in mud.');
+// Pick a non-default option so the dropdown is exercised, not just defaulted.
+await p.selectOption('.wa select', { label: 'A workshop' });
+const chosen = await p.locator('.wa select').inputValue();
+const optionCount = await p.locator('.wa select option').count();
+if (optionCount < 5) bad.push(`enquiry dropdown has only ${optionCount} options`);
 if (await sendBtn.isDisabled()) bad.push('send still disabled after filling required fields');
 
 const [wa] = await Promise.all([
@@ -74,7 +79,7 @@ if (num !== '919353739352') bad.push('wrong whatsapp number: ' + num);
 const body = waUrl.searchParams.get('text') || '';
 if (!body.includes('Asha')) bad.push('name missing from whatsapp message');
 if (!body.includes('plot & want')) bad.push('message body truncated at the ampersand');
-if (!body.includes('A new house')) bad.push('enquiry type missing from message');
+if (!body.includes(chosen)) bad.push(`enquiry type "${chosen}" missing from message`);
 await wa.close();
 
 // Big logo present on contact and in the footer.

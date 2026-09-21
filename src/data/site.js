@@ -18,13 +18,18 @@ export const site = {
   linkedin: 'https://www.linkedin.com/company/104136538/',
 };
 
+/* Options in the contact form's enquiry dropdown. Kept aligned with the
+   services the studio actually offers. */
 export const enquiryTypes = [
-  'A new house',
-  'Interiors',
-  'Landscape',
+  'A new project',
+  'Architectural design',
+  'Interior design',
+  'Landscape design',
   'Natural building consultation',
   'A workshop',
-  'Something else',
+  'Internship or careers',
+  'Press or publication',
+  'General enquiry',
 ];
 
 export const contactGroups = [
