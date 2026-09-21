@@ -27,6 +27,15 @@ export const enquiryTypes = [
   'Career',
 ];
 
+/* Routes offered by the "+ Contact" nav menu. Each opens the contact page with
+   that enquiry preselected in the form. Labels mirror enquiryTypes. */
+export const contactMenu = [
+  { type: 'Project', note: 'A house, interiors or landscape' },
+  { type: 'Workshops', note: 'Hands-on natural building' },
+  { type: 'Career', note: 'Internships and roles' },
+  { type: 'General contact', note: 'Anything else' },
+];
+
 export const contactGroups = [
   { label: 'Project enquiries', email: site.email },
   { label: 'Workshops and learning', email: site.email },

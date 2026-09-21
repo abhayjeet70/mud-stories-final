@@ -1,53 +1,46 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { projects } from '../data/projects';
-import { site } from '../data/site';
+import { contactMenu, site } from '../data/site';
 
 const LINKS = [
   { to: '/work', label: 'Work' },
   { to: '/studio', label: 'Studio' },
   { to: '/notes', label: 'Notes' },
-  { to: '/contact', label: 'Contact' },
 ];
 
-/* `light` inverts the header to white type for the full-bleed homepage. */
-export default function Header({ light = false }) {
-  const [open, setOpen] = useState(false); // desktop projects dropdown
-  const [sheet, setSheet] = useState(false); // mobile panel
-  const [acc, setAcc] = useState(false); // mobile projects accordion
+const projectItems = projects.map((p) => ({
+  to: `/work/${p.slug}`,
+  title: p.title,
+  note: p.location,
+}));
+
+const contactItems = contactMenu.map((c) => ({
+  to: `/contact?about=${encodeURIComponent(c.type)}`,
+  title: c.type,
+  note: c.note,
+}));
+
+/* One folder-style nav menu, used by both + Projects and + Contact.
+   Closing is deferred so the pointer can travel from the trigger into the
+   panel — the panel sits flush and makes the visual gap with its own padding,
+   so there is no dead zone to cross. */
+function NavMenu({ label, items, current }) {
+  const [open, setOpen] = useState(false);
   const wrap = useRef(null);
   const trigger = useRef(null);
-  const shutTimer = useRef(null);
-  const { pathname } = useLocation();
+  const shut = useRef(null);
 
-  // Closing is deferred so a pointer crossing between the trigger and the panel
-  // — or briefly leaving and coming back — does not dismiss the menu.
   const keepOpen = useCallback(() => {
-    clearTimeout(shutTimer.current);
+    clearTimeout(shut.current);
     setOpen(true);
   }, []);
   const shutSoon = useCallback(() => {
-    clearTimeout(shutTimer.current);
-    shutTimer.current = setTimeout(() => setOpen(false), 320);
+    clearTimeout(shut.current);
+    shut.current = setTimeout(() => setOpen(false), 320);
   }, []);
-  useEffect(() => () => clearTimeout(shutTimer.current), []);
+  useEffect(() => () => clearTimeout(shut.current), []);
 
-  // Close everything on navigation.
-  useEffect(() => {
-    setOpen(false);
-    setSheet(false);
-    setAcc(false);
-  }, [pathname]);
-
-  // Lock scroll behind the mobile sheet.
-  useEffect(() => {
-    document.body.style.overflow = sheet ? 'hidden' : '';
-    return () => {
-      document.body.style.overflow = '';
-    };
-  }, [sheet]);
-
-  // Escape closes the dropdown and returns focus to its trigger.
   useEffect(() => {
     if (!open) return;
     const onKey = (e) => {
@@ -56,16 +49,87 @@ export default function Header({ light = false }) {
         trigger.current?.focus();
       }
     };
-    const onClick = (e) => {
+    const onDown = (e) => {
       if (wrap.current && !wrap.current.contains(e.target)) setOpen(false);
     };
     document.addEventListener('keydown', onKey);
-    document.addEventListener('mousedown', onClick);
+    document.addEventListener('mousedown', onDown);
     return () => {
       document.removeEventListener('keydown', onKey);
-      document.removeEventListener('mousedown', onClick);
+      document.removeEventListener('mousedown', onDown);
     };
   }, [open]);
+
+  return (
+    <div
+      className="dropwrap"
+      ref={wrap}
+      onMouseEnter={keepOpen}
+      onMouseLeave={shutSoon}
+      onFocus={keepOpen}
+    >
+      <button
+        ref={trigger}
+        aria-haspopup="true"
+        aria-expanded={open}
+        aria-current={current ? 'page' : undefined}
+        onClick={() => (open ? setOpen(false) : keepOpen())}
+      >
+        + {label}
+      </button>
+      {open && (
+        <div className="drop" onMouseEnter={keepOpen} onMouseLeave={shutSoon}>
+          <div className="drop__inner" role="menu" aria-label={label}>
+            {items.map((it) => (
+              <Link key={it.to} to={it.to} role="menuitem">
+                {it.title}
+                <span>{it.note}</span>
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* `light` inverts the header to white type for the full-bleed slideshow routes. */
+export default function Header({ light = false }) {
+  const [sheet, setSheet] = useState(false);
+  const [openAcc, setOpenAcc] = useState(null); // 'projects' | 'contact' | null
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    setSheet(false);
+    setOpenAcc(null);
+  }, [pathname]);
+
+  useEffect(() => {
+    document.body.style.overflow = sheet ? 'hidden' : '';
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [sheet]);
+
+  const acc = (key, label, items) => (
+    <>
+      <button
+        aria-expanded={openAcc === key}
+        onClick={() => setOpenAcc((v) => (v === key ? null : key))}
+      >
+        {openAcc === key ? '−' : '+'} {label}
+      </button>
+      {openAcc === key && (
+        <div className="sub">
+          {items.map((it) => (
+            <Link key={it.to} to={it.to}>
+              {it.title} — {it.note}
+            </Link>
+          ))}
+        </div>
+      )}
+    </>
+  );
 
   return (
     <>
@@ -76,39 +140,13 @@ export default function Header({ light = false }) {
         </Link>
 
         <nav className="nav" aria-label="Primary">
-          <div
-            className="dropwrap"
-            ref={wrap}
-            onMouseEnter={keepOpen}
-            onMouseLeave={shutSoon}
-            onFocus={keepOpen}
-          >
-            <button
-              ref={trigger}
-              aria-haspopup="true"
-              aria-expanded={open}
-              onClick={() => (open ? setOpen(false) : keepOpen())}
-            >
-              + Projects
-            </button>
-            {open && (
-              <div className="drop" onMouseEnter={keepOpen} onMouseLeave={shutSoon}>
-                <div className="drop__inner" role="menu" aria-label="Projects">
-                  {projects.map((p) => (
-                    <Link key={p.slug} to={`/work/${p.slug}`} role="menuitem">
-                      {p.title}
-                      <span>{p.location}</span>
-                    </Link>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
+          <NavMenu label="Projects" items={projectItems} current={pathname.startsWith('/work/')} />
           {LINKS.map((l) => (
             <NavLink key={l.to} to={l.to}>
               {l.label}
             </NavLink>
           ))}
+          <NavMenu label="Contact" items={contactItems} current={pathname === '/contact'} />
         </nav>
 
         <button className="burger" onClick={() => setSheet(true)} aria-expanded={sheet}>
@@ -125,23 +163,13 @@ export default function Header({ light = false }) {
             </button>
           </div>
           <nav aria-label="Mobile">
-            <button aria-expanded={acc} onClick={() => setAcc((v) => !v)}>
-              {acc ? '− Projects' : '+ Projects'}
-            </button>
-            {acc && (
-              <div className="sub">
-                {projects.map((p) => (
-                  <Link key={p.slug} to={`/work/${p.slug}`}>
-                    {p.title} — {p.location}
-                  </Link>
-                ))}
-              </div>
-            )}
+            {acc('projects', 'Projects', projectItems)}
             {LINKS.map((l) => (
               <NavLink key={l.to} to={l.to}>
                 {l.label}
               </NavLink>
             ))}
+            {acc('contact', 'Contact', contactItems)}
           </nav>
         </div>
       )}

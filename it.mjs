@@ -8,16 +8,17 @@ const bad = [];
 // --- desktop ---
 let p = await b.newPage({ viewport: { width: 1440, height: 900 } });
 await p.goto(B + '/work', { waitUntil: 'networkidle' });
-await p.hover('.dropwrap button');
+await p.hover('.dropwrap:first-of-type button');
 await p.waitForTimeout(300);
 const items = await p.locator('.drop a').count();
 if (items !== 7) bad.push(`dropdown shows ${items} projects, expected 7`);
 
 // The panel must survive the pointer travelling from the trigger into the list,
 // and must still be open long enough to click a project.
-await p.mouse.move(1016, 45);
+const projBox = await p.locator('.dropwrap:first-of-type button').boundingBox();
+await p.mouse.move(projBox.x + projBox.width / 2, projBox.y + projBox.height / 2);
 await p.waitForTimeout(60);
-await p.mouse.move(1016, 120); // crosses the former dead gap
+await p.mouse.move(projBox.x + projBox.width / 2, projBox.y + projBox.height + 40); // crosses the former dead gap
 await p.waitForTimeout(400);
 if (!(await p.locator('.drop').isVisible())) bad.push('dropdown closed while moving into it');
 const target = p.locator('.drop a').nth(3);
@@ -52,6 +53,28 @@ await p.locator('.track__btn--next').click();
 await p.waitForTimeout(900);
 const after = await p.evaluate(() => document.querySelector('.track').scrollLeft);
 if (after <= before) bad.push(`next arrow did not scroll track (${before} -> ${after})`);
+// "+ Contact" nav menu opens, lists the enquiry routes, and preselects the
+// chosen one on the contact page.
+await p.goto(B + '/studio', { waitUntil: 'networkidle' });
+const contactTrigger = p.locator('.dropwrap').last().locator('button');
+if ((await contactTrigger.textContent())?.trim() !== '+ Contact')
+  bad.push('no "+ Contact" menu in the nav');
+await contactTrigger.hover();
+await p.waitForTimeout(400);
+const cItems = p.locator('.dropwrap').last().locator('.drop a');
+const cCount = await cItems.count();
+if (cCount !== 4) bad.push(`contact menu has ${cCount} items, expected 4`);
+await cItems.filter({ hasText: 'Career' }).first().click();
+await p.waitForTimeout(700);
+if (!p.url().includes('/contact')) bad.push('contact menu item did not navigate');
+const preset = (await p.locator('.dd__trigger span').first().textContent())?.trim();
+if (preset !== 'Career') bad.push(`enquiry not preselected from menu, got "${preset}"`);
+
+// A bogus ?about must fall back rather than be trusted.
+await p.goto(B + '/contact?about=%3Cscript%3E', { waitUntil: 'networkidle' });
+const fallback = (await p.locator('.dd__trigger span').first().textContent())?.trim();
+if (fallback !== 'Workshops') bad.push(`bad ?about not rejected, got "${fallback}"`);
+
 // Contact form must build a wa.me link and open it in a new tab.
 await p.goto(B + '/contact', { waitUntil: 'networkidle' });
 const sendBtn = p.locator('.wa__send');
@@ -138,7 +161,7 @@ if (!/^02 \//.test(counter || '')) bad.push(`work reel did not advance, counter 
 await p.locator('.burger').click();
 await p.waitForTimeout(300);
 if (!(await p.locator('.sheet').isVisible())) bad.push('mobile sheet did not open');
-await p.locator('.sheet nav button').first().click();
+await p.locator('.sheet nav button', { hasText: 'Projects' }).first().click();
 await p.waitForTimeout(250);
 const sub = await p.locator('.sheet .sub a').count();
 if (sub !== 7) bad.push(`mobile accordion shows ${sub} projects, expected 7`);

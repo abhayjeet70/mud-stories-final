@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import Dropdown from './Dropdown';
 import { enquiryTypes, site } from '../data/site';
 
@@ -21,7 +22,14 @@ export const whatsappLink = (fields) =>
 const EMPTY = { name: '', place: '', about: enquiryTypes[0], message: '' };
 
 export default function WhatsAppForm() {
-  const [f, setF] = useState(EMPTY);
+  // The "+ Contact" nav menu links here with ?about=<type> to preselect the
+  // enquiry. Anything not in the list is ignored rather than trusted.
+  const [params] = useSearchParams();
+  const asked = params.get('about');
+  const [f, setF] = useState({
+    ...EMPTY,
+    about: enquiryTypes.includes(asked) ? asked : EMPTY.about,
+  });
   const [sent, setSent] = useState(false);
 
   const set = (k) => (e) => setF((v) => ({ ...v, [k]: e.target.value }));
