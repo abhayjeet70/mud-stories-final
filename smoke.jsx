@@ -7,6 +7,7 @@ import { MemoryRouter } from 'react-router-dom';
 import App from './src/App.jsx';
 import { projects } from './src/data/projects.js';
 import { buildMessage, whatsappLink } from './src/components/WhatsAppForm.jsx';
+import { enquiryTypes } from './src/data/site.js';
 
 const render = (url) =>
   renderToString(
@@ -41,12 +42,12 @@ for (const s of ['mudstories.crafted@gmail.com', '+91 93537 39352', 'Domlur']) {
   const fields = {
     name: '  Asha  ',
     place: 'Bengaluru',
-    about: 'A workshop',
+    about: enquiryTypes[0],
     message: ['We have a 40x60 plot & want to build in mud.', 'Can we talk?'].join(String.fromCharCode(10)),
   };
   const msg = buildMessage(fields);
   assert.ok(msg.startsWith("Hello Mud Stories, I'm Asha."), 'name not trimmed into greeting');
-  assert.ok(msg.includes('A workshop'), 'enquiry type missing');
+  assert.ok(msg.includes(enquiryTypes[0]), 'enquiry type missing');
   assert.ok(msg.includes('Bengaluru'), 'location missing');
   assert.ok(msg.includes('40x60 plot & want'), 'message body missing');
 
@@ -62,6 +63,12 @@ for (const s of ['mudstories.crafted@gmail.com', '+91 93537 39352', 'Domlur']) {
     !buildMessage({ ...fields, place: '   ' }).includes('Site / location'),
     'blank location should be dropped'
   );
+}
+
+// Every dropdown option must survive into the message it builds.
+for (const about of enquiryTypes) {
+  const msg = buildMessage({ name: 'A', place: '', about, message: 'hi' });
+  assert.ok(msg.includes(about), `enquiry option "${about}" lost from message`);
 }
 
 // Text tones must clear WCAG AA against the earth ground they sit on.

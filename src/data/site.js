@@ -21,15 +21,10 @@ export const site = {
 /* Options in the contact form's enquiry dropdown. Kept aligned with the
    services the studio actually offers. */
 export const enquiryTypes = [
-  'A new project',
-  'Architectural design',
-  'Interior design',
-  'Landscape design',
-  'Natural building consultation',
-  'A workshop',
-  'Internship or careers',
-  'Press or publication',
-  'General enquiry',
+  'Workshops',
+  'Project',
+  'General contact',
+  'Career',
 ];
 
 export const contactGroups = [

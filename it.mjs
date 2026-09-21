@@ -59,10 +59,10 @@ if (!(await sendBtn.isDisabled())) bad.push('send enabled before required fields
 await p.fill('.wa__row .wa__field:first-child input', 'Asha');
 await p.fill('.wa textarea', 'We have a plot & want to build in mud.');
 // Pick a non-default option so the dropdown is exercised, not just defaulted.
-await p.selectOption('.wa select', { label: 'A workshop' });
+await p.selectOption('.wa select', { label: 'Workshops' });
 const chosen = await p.locator('.wa select').inputValue();
 const optionCount = await p.locator('.wa select option').count();
-if (optionCount < 5) bad.push(`enquiry dropdown has only ${optionCount} options`);
+if (optionCount !== 4) bad.push(`enquiry dropdown has ${optionCount} options, expected 4`);
 if (await sendBtn.isDisabled()) bad.push('send still disabled after filling required fields');
 
 const [wa] = await Promise.all([
