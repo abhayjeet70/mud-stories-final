@@ -1,6 +1,6 @@
 import { Link, Navigate, useParams } from 'react-router-dom';
 import EnquiryForm from '../components/EnquiryForm';
-import { Picture, Reveal, Seo } from '../components/bits';
+import { Reveal, Seo } from '../components/bits';
 import {
   enquiryBySlug,
   enquiryPages,
@@ -12,8 +12,13 @@ import {
 } from '../data/enquiries';
 import { site } from '../data/site';
 
-/* One template for all four contact routes. The editorial section above each
-   form differs by route — what someone needs to read before writing in. */
+/* One template for all four contact routes.
+
+   The form comes first — someone arriving here has already chosen what they
+   want to write about, so the page opens with the thing they came to do. No
+   hero image: it only pushed the form below the fold. Supporting detail sits
+   underneath, condensed, with the longer reading folded away so the page stays
+   short by default. */
 export default function Enquiry() {
   const { slug } = useParams();
   const page = enquiryBySlug(slug);
@@ -23,142 +28,142 @@ export default function Enquiry() {
 
   return (
     <>
-      <Seo
-        title={`${page.title} — ${site.name}`}
-        description={page.seo}
-        image={page.hero.src}
-      />
+      <Seo title={`${page.title} — ${site.name}`} description={page.seo} />
 
       <main id="main" className="page">
-        <div className="wide">
-          <Reveal>
+        <div className="wide enq">
+          <Reveal className="enq__head">
             <p className="meta">Contact — {page.nav}</p>
-            <h1 className="display" style={{ margin: '12px 0 26px' }}>{page.title}</h1>
+            <h1>{page.title}</h1>
+            <p className="enq__lede">{page.lede}</p>
+          </Reveal>
+
+          <Reveal className="enq__form">
+            <EnquiryForm page={page} />
           </Reveal>
         </div>
 
-        <Reveal className="bleed">
-          <Picture img={page.hero} priority sizes="100vw" ratio="21 / 9" />
-        </Reveal>
+        {/* ------------------------------------ supporting detail, below the form */}
 
-        <div className="wide section--tight">
-          <Reveal>
-            <p className="lede" style={{ maxWidth: '38ch', margin: 0 }}>{page.lede}</p>
-          </Reveal>
-        </div>
-
-        {/* ---------------------------------------------- route-specific copy */}
-
-        {page.slug === 'project' && (
-          <section className="wide section--tight">
-            <Reveal>
-              <p className="meta">How we work together</p>
-            </Reveal>
-            <ul className="list" style={{ marginTop: 24 }}>
-              {engagements.map((e, i) => (
-                <Reveal as="li" key={e.title}>
-                  <span className="meta">{String(i + 1).padStart(2, '0')}</span>
-                  <div>
-                    <h2>{e.title}</h2>
-                    <p className="meta" style={{ marginBottom: 10 }}>{e.forWho}</p>
-                    <p style={{ margin: 0, color: 'var(--ink-soft)', maxWidth: '62ch' }}>{e.body}</p>
+        <section className="wide section--tight">
+          {page.slug === 'project' && (
+            <>
+              <Reveal>
+                <p className="meta">How we work together</p>
+              </Reveal>
+              <dl className="rows">
+                {engagements.map((e) => (
+                  <div key={e.title}>
+                    <dt>{e.title}</dt>
+                    <dd>{e.forWho}</dd>
                   </div>
-                </Reveal>
-              ))}
-            </ul>
-            <div className="two" style={{ marginTop: 44 }}>
-              <Reveal>
-                <h2 className="meta">On cost</h2>
-                <p style={{ marginTop: 12, color: 'var(--ink-soft)' }}>{engagementNotes.cost}</p>
-              </Reveal>
-              <Reveal>
-                <h2 className="meta">On availability</h2>
-                <p style={{ marginTop: 12, color: 'var(--ink-soft)' }}>{engagementNotes.availability}</p>
-              </Reveal>
-            </div>
-          </section>
-        )}
+                ))}
+              </dl>
+              <details className="more">
+                <summary>What each of those involves, and what it costs</summary>
+                <div className="prose" style={{ marginTop: 20 }}>
+                  {engagements.map((e) => (
+                    <p key={e.title}>
+                      <strong>{e.title}.</strong> {e.body}
+                    </p>
+                  ))}
+                  <p>
+                    <strong>On cost.</strong> {engagementNotes.cost}
+                  </p>
+                  <p>
+                    <strong>On availability.</strong> {engagementNotes.availability}
+                  </p>
+                </div>
+              </details>
+            </>
+          )}
 
-        {page.slug === 'workshops' && (
-          <section className="wide section--tight">
-            <Reveal>
-              <p className="meta">What we run</p>
-            </Reveal>
-            <div className="trio" style={{ marginTop: 24 }}>
-              {workshopOfferings.map((w) => (
-                <Reveal as="article" key={w.title}>
-                  <Picture img={w.image} ratio="4 / 3" sizes="(max-width: 860px) 100vw, 32vw" />
-                  <h2>{w.title}</h2>
-                  <p>{w.lede}</p>
-                  <dl className="mini">
-                    <div><dt className="meta">Length</dt><dd>{w.duration}</dd></div>
-                    <div><dt className="meta">Where</dt><dd>{w.where}</dd></div>
-                    <div><dt className="meta">Who</dt><dd>{w.who}</dd></div>
-                    <div><dt className="meta">From</dt><dd>{w.from}</dd></div>
-                  </dl>
-                </Reveal>
-              ))}
-            </div>
-          </section>
-        )}
+          {page.slug === 'workshops' && (
+            <>
+              <Reveal>
+                <p className="meta">What we run</p>
+              </Reveal>
+              <dl className="rows">
+                {workshopOfferings.map((w) => (
+                  <div key={w.title}>
+                    <dt>{w.title}</dt>
+                    <dd>
+                      {w.duration} · {w.where} · from {w.from}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+              <details className="more">
+                <summary>Who each workshop is for</summary>
+                <div className="prose" style={{ marginTop: 20 }}>
+                  {workshopOfferings.map((w) => (
+                    <p key={w.title}>
+                      <strong>{w.title}.</strong> {w.lede} {w.who}
+                    </p>
+                  ))}
+                </div>
+              </details>
+            </>
+          )}
 
-        {page.slug === 'careers' && (
-          <>
-            <section className="wide section--tight">
+          {page.slug === 'careers' && (
+            <>
               <Reveal>
                 <p className="meta">Open roles</p>
               </Reveal>
-              <ul className="list" style={{ marginTop: 24 }}>
+              <dl className="rows">
                 {openings.map((o) => (
-                  <Reveal as="li" key={o.role}>
-                    <span className="meta">{o.status}</span>
-                    <div>
-                      <h2>{o.role}</h2>
-                      <p className="meta" style={{ marginBottom: 10 }}>{o.type}</p>
-                      <p style={{ margin: '0 0 14px', color: 'var(--ink-soft)', maxWidth: '62ch' }}>{o.body}</p>
-                      <ul className="tags">
-                        {o.wants.map((w) => (
-                          <li key={w}>{w}</li>
-                        ))}
-                      </ul>
-                    </div>
-                  </Reveal>
+                  <div key={o.role}>
+                    <dt>{o.role}</dt>
+                    <dd>
+                      {o.type} · {o.status}
+                    </dd>
+                  </div>
                 ))}
-              </ul>
-            </section>
-
-            <section className="wide section--tight">
-              <div className="two">
-                <Reveal>
-                  <h2 className="meta">Volunteering</h2>
-                  <p style={{ marginTop: 12, color: 'var(--ink-soft)' }}>{volunteering.intro}</p>
-                </Reveal>
-                <Reveal>
+              </dl>
+              <details className="more">
+                <summary>What each role involves, and volunteering</summary>
+                <div className="prose" style={{ marginTop: 20 }}>
+                  {openings.map((o) => (
+                    <p key={o.role}>
+                      <strong>{o.role}.</strong> {o.body} <em>Looking for: {o.wants.join(', ')}.</em>
+                    </p>
+                  ))}
+                  <p>
+                    <strong>Volunteering.</strong> {volunteering.intro}
+                  </p>
                   <ul className="plain">
-                    {volunteering.points.map((p) => (
-                      <li key={p}>{p}</li>
+                    {volunteering.points.map((v) => (
+                      <li key={v}>{v}</li>
                     ))}
                   </ul>
-                </Reveal>
-              </div>
-            </section>
-          </>
-        )}
+                </div>
+              </details>
+            </>
+          )}
 
-        {/* ---------------------------------------------------------- the form */}
-
-        <section className="wide section--tight" id="form">
-          <div className="formwrap">
+          {page.slug === 'general' && (
             <Reveal>
-              <EnquiryForm page={page} />
+              <p className="meta">Studio</p>
+              <dl className="rows">
+                <div>
+                  <dt>{site.address}</dt>
+                  <dd>{site.hours}</dd>
+                </div>
+                <div>
+                  <dt>
+                    <a href={`mailto:${site.email}`}>{site.email}</a>
+                  </dt>
+                  <dd>
+                    <a href={`tel:${site.phone.replace(/\s/g, '')}`}>{site.phone}</a>
+                  </dd>
+                </div>
+              </dl>
             </Reveal>
-          </div>
+          )}
         </section>
 
         <section className="wide section--tight">
-          <Reveal>
-            <p className="meta">Or write to us about</p>
-          </Reveal>
           <div className="otherlinks">
             {others.map((o) => (
               <Link key={o.slug} to={`/contact/${o.slug}`}>

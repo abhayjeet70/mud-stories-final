@@ -1015,12 +1015,6 @@ h1, h2, h3, h4 {
 
 /* ---------------------------------------------------------- enquiry pages */
 
-.formwrap {
-  max-width: 760px;
-  padding-top: 26px;
-  border-top: 1px solid var(--rule);
-}
-
 .wa__intro {
   margin: 10px 0 0;
   color: var(--ink-soft);
@@ -1058,35 +1052,6 @@ h1, h2, h3, h4 {
 .wa__hint { margin: 8px 0 0; font-size: 12px; color: var(--ink-mute); }
 .wa__err { color: #7a2e1d; font-weight: 500; }
 
-/* Three-up cards for the workshop offerings. */
-.trio { display: grid; grid-template-columns: repeat(3, 1fr); gap: 34px; }
-.trio article { margin: 0; }
-.trio h2 { font-size: 1.4rem; font-weight: 400; margin: 18px 0 8px; }
-.trio p { margin: 0 0 16px; color: var(--ink-soft); font-size: 13px; }
-@media (max-width: 860px) { .trio { grid-template-columns: 1fr; gap: 30px; } }
-
-.mini { margin: 0; border-top: 1px solid var(--rule); }
-.mini > div {
-  display: flex;
-  justify-content: space-between;
-  gap: 16px;
-  padding: 9px 0;
-  border-bottom: 1px solid var(--rule);
-}
-.mini dd { margin: 0; font-size: 13px; text-align: right; }
-
-/* Requirement chips on the careers page. */
-.tags { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; margin: 0; padding: 0; }
-.tags li {
-  font-family: var(--mono);
-  font-size: 9px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--ink-mute);
-  border: 1px solid var(--rule);
-  padding: 6px 10px;
-}
-
 .plain { list-style: none; margin: 0; padding: 0; }
 .plain li {
   padding: 12px 0;
@@ -1123,3 +1088,57 @@ h1, h2, h3, h4 {
 .routes p { margin: 0; font-size: 13px; color: var(--ink-soft); }
 @media (max-width: 860px) { .routes { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 520px) { .routes { grid-template-columns: 1fr; gap: 0; } }
+
+/* ------------------------------------------------------ enquiry page layout */
+/* Title beside the form, not above it — the form is the reason for the page,
+   so it must be reachable without scrolling. Stacks below 960px. */
+
+.enq {
+  display: grid;
+  grid-template-columns: minmax(240px, 360px) 1fr;
+  gap: 60px;
+  align-items: start;
+  padding-block: 0 20px;
+}
+.enq__head h1 {
+  font-size: clamp(2.2rem, 4.4vw, 3.6rem);
+  font-weight: 300;
+  margin: 12px 0 18px;
+}
+.enq__lede { margin: 0; color: var(--ink-soft); max-width: 40ch; }
+.enq__form { min-width: 0; padding-top: 6px; }
+
+@media (max-width: 960px) {
+  .enq { grid-template-columns: 1fr; gap: 26px; }
+  .enq__lede { max-width: none; }
+}
+
+/* Compact reference rows — a title and one line of detail. */
+.rows { margin: 22px 0 0; border-top: 1px solid var(--rule); }
+.rows > div {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 4px 24px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--rule);
+}
+.rows dt { font-family: var(--serif); font-size: 1.25rem; }
+.rows dd { margin: 0; font-size: 13px; color: var(--ink-mute); text-align: right; }
+.rows a { border-bottom: 1px solid var(--rule); }
+
+@media (max-width: 620px) {
+  .rows dd { text-align: left; }
+}
+
+/* Tighter rhythm on small screens — a ten-field form is long enough already. */
+@media (max-width: 760px) {
+  .section { padding-block: 56px; }
+  .section--tight { padding-block: 34px; }
+  .wa__field { margin-top: 16px; }
+  .wa__row { gap: 0; }
+  .wa__foot { margin-top: 22px; }
+  .enq__head h1 { margin: 8px 0 12px; }
+  .rows > div { padding: 12px 0; }
+}
