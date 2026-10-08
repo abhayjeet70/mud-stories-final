@@ -144,13 +144,17 @@ export default function Project() {
               <Reveal>
                 <h2 className="meta">The brief</h2>
                 <div className="prose" style={{ marginTop: 14 }}>
-                  <p>{project.brief}</p>
+                  {project.brief.split('\n\n').map((para) => (
+                    <p key={para}>{para}</p>
+                  ))}
                 </div>
               </Reveal>
               <Reveal>
                 <h2 className="meta">The approach</h2>
                 <div className="prose" style={{ marginTop: 14 }}>
-                  <p>{project.approach}</p>
+                  {project.approach.split('\n\n').map((para) => (
+                    <p key={para}>{para}</p>
+                  ))}
                 </div>
               </Reveal>
             </div>

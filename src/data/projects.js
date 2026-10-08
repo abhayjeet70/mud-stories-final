@@ -8,35 +8,47 @@
    photography when the client supplies it. */
 
 const p = (src, w, h, alt, caption, own = true) => ({ src, w, h, alt, caption, own });
+/* Numbered photos in /images/projects/<slug>/ — rows are [w, h, alt, caption]. */
+const shots = (slug, rows) =>
+  rows.map(([w, h, alt, caption], i) => p(`/images/projects/${slug}/${String(i + 1).padStart(2, '0')}.webp`, w, h, alt, caption));
 
 export const projects = [
   {
     slug: 'thendral-ecr-farmhouse',
     title: 'Thendral',
     category: 'Residential',
-    location: 'East Coast Road, Chennai',
-    year: '2024',
-    area: '340 m²',
+    location: 'East Coast Road, Kadapakkam',
+    year: '2025',
+    area: '1,500 sq ft',
     status: 'Completed',
-    cover: p('/images/Thendral-restored.webp', 1254, 1254, 'Thendral farmhouse on the East Coast Road, Chennai'),
+    cover: shots('thendral-ecr-farmhouse', [[1082, 1454, 'Thendral from the garden path', '']])[0],
     summary:
-      'A coastal farmhouse planned around a shaded central court and a sea breeze that arrives every afternoon.',
+      'A coastal farmhouse designed to breathe — an open plan shaped around the prevailing sea breeze, with handcrafted brick jaalis, lime plaster and natural materials creating a cool, porous home.',
     brief:
-      'A family who had spent years in apartments wanted a weekend house on a long, narrow coastal plot — somewhere their children could be outdoors most of the day and where the extended family could gather without the house feeling cavernous when only two people were in it.',
+      'An old farmhouse nestled among coconut and jackfruit trees, along the coast of ECR.\n\nThe home was inward and confined, while the landscape outside was expansive. The brief was to open the house to its surroundings — bringing in the breeze, daylight and garden, and reimagining it as a quiet home for a couple entering a new chapter of life.',
     approach:
-      'The plan folds around a central court that stays in shade for most of the day. Living spaces open onto it on three sides so the house can be used in parts: two rooms and the verandah on an ordinary weekend, the whole thing when twenty people arrive. Openings on the seaward side are sized and placed to pull the afternoon breeze straight through the court and out the back, which does the work of cooling without any mechanical help. Salt-laden coastal air ruled out exposed metal, so joinery, fixings and finishes were all chosen for that exposure.',
-    materials: ['Rubble stone plinth', 'Adobe and cob walls', 'Lime plaster', 'Country tile roof on timber', 'Oxide flooring'],
+      'The house was opened to the coastal breeze, with the plan reorganised around light, air and the landscape.\n\nOpenings were carefully placed along the prevailing wind direction, while handcrafted brick jaalis filter the harsh coastal sun and allow the breeze to pass through.\n\nLarge French windows dissolve the edge between the home and the garden, while a skylight draws daylight into the heart of the house.\n\nLime plaster, natural stone, timber and other natural materials ground the intervention in its coastal setting.\n\nThe architecture seeks to work with nature rather than seal it out — allowing the house to breathe, age and belong to its landscape.',
+    materials: ['Red Bricks', 'Lime Plaster', 'Brick Jaali', 'Green Kota Stone', 'Wooden Openings'],
     facts: [
-      { label: 'Plot', value: '0.6 acre' },
-      { label: 'Built area', value: '340 m²' },
-      { label: 'Roof', value: 'Country tile on seasoned timber' },
-      { label: 'Walls', value: 'Adobe, 450mm' },
+      { label: 'Plot', value: '11,000 sq ft' },
+      { label: 'Built area', value: '1,500 sq ft' },
+      { label: 'Roof', value: 'Concrete roof' },
+      { label: 'Walls', value: '230mm red bricks' },
     ],
-    gallery: [
-      p('/images/Thendral-restored.webp', 1254, 1254, 'Thendral farmhouse exterior', 'Thendral, East Coast Road.'),
-      p('/images/generated/project-coastal-courtyard.webp', 1536, 1024, 'Coastal courtyard study', 'Courtyard study — the shaded centre of the plan.', false),
-      p('/images/generated/interior-courtyard-veranda.webp', 1536, 1024, 'Verandah onto the court', 'Verandah opening onto the court on three sides.', false),
-    ],
+    gallery: shots('thendral-ecr-farmhouse', [
+      [1082, 1454, 'Thendral from the garden path', 'Brick-paved path along the sea-facing side.'],
+      [841, 1870, 'Thendral entrance at dusk', 'The entrance at dusk, behind a brick jaali screen.'],
+      [1086, 1448, 'Brick jaali atrium', 'Handcrafted brick jaalis filter the coastal sun.'],
+      [1086, 1448, 'Skylit atrium', 'A skylight draws daylight into the heart of the house.'],
+      [1086, 1448, 'Stair beside the jaali', 'The stair, lit through the brick lattice.'],
+      [1086, 1448, 'Entrance with French windows', 'Large French windows dissolve the edge between home and garden.'],
+      [1086, 1448, 'Door open to the garden', 'The breeze passes straight through to the garden.'],
+      [1086, 1448, 'Room with green Kota flooring', 'Green Kota stone underfoot, the garden framed ahead.'],
+      [841, 1870, 'Living space with timber openings', 'Timber openings along the prevailing wind direction.'],
+      [1086, 1448, 'Lime plastered bathroom', 'Lime plaster and Kota stone in the bathroom.'],
+      [1086, 1448, 'Bathroom vanity', 'A vanity set against the lime plaster.'],
+      [1086, 1448, 'House among coconut palms', 'The old farmhouse among coconut and jackfruit trees.'],
+    ]),
   },
   {
     slug: 'varanasi-residence',
@@ -44,82 +56,103 @@ export const projects = [
     category: 'Residential',
     location: 'Varanasi, Uttar Pradesh',
     year: '2023',
-    area: '180 m²',
-    status: 'Completed',
-    cover: p('/images/varanasi.png', 601, 600, 'Varanasi Residence, Uttar Pradesh'),
+    area: '2,400 sq ft',
+    status: 'Proposed',
+    cover: shots('varanasi-residence', [[1672, 941, 'Varanasi Residence street elevation', '']])[0],
     summary:
-      'A compact city house working with a tight plot, a hot dry summer and a strong local building tradition.',
+      'A contemporary residence rooted in the architectural language of Varanasi — where brick, light, shade and greenery shape a quiet home within the dense city.',
     brief:
-      'A narrow urban plot in a dense part of the city, with buildings hard against two sides and a single open face. The client wanted a house that belonged to Varanasi rather than one that could have been dropped into any Indian city.',
+      'A compact urban home on a 3,000 sq ft plot, surrounded by the dense fabric of Varanasi.\n\nThe brief was to create a contemporary family residence that draws from the city’s brick architecture, arches and jaalis, while opening the home to light, air and greenery.',
     approach:
-      'With only one open face, light had to come from above. A small top-lit shaft runs through the centre of the plan, drawing hot air up and out while spilling daylight into rooms that would otherwise be sealed. Thick masonry on the exposed western wall delays the afternoon heat by several hours, so the peak arrives after the family has already moved to the terrace. Detailing borrows directly from the older houses nearby — deep reveals, a shaded threshold, and a terrace built to be lived on.',
-    materials: ['Load-bearing brick', 'Lime mortar and plaster', 'Stone flooring', 'Timber joinery'],
+      'The architecture reinterprets the brick arches and jaalis of Varanasi through a contemporary expression.\n\nA central light and ventilation court draws air and daylight deep into the home, while layered brick façades create moments of shade and privacy.\n\nThe upper terrace unfolds as an open garden court — a space for gathering, pause and views across the city.',
+    materials: ['Red brick', 'Exposed brickwork', 'Concrete roof', 'Natural stone flooring'],
     facts: [
-      { label: 'Plot', value: 'Narrow urban infill' },
-      { label: 'Built area', value: '180 m²' },
-      { label: 'Strategy', value: 'Central light and ventilation shaft' },
-      { label: 'Levels', value: 'Two plus terrace' },
+      { label: 'Plot', value: '3,000 sq ft' },
+      { label: 'Built area', value: '2,400 sq ft' },
+      { label: 'Strategy', value: 'Central light & ventilation court' },
+      { label: 'Language', value: 'Brick arches + jaalis' },
+      { label: 'Status', value: 'Proposed' },
     ],
-    gallery: [
-      p('/images/varanasi.png', 601, 600, 'Varanasi Residence', 'Varanasi Residence, Uttar Pradesh.'),
-      p('/images/generated/project-courtyard-threshold.webp', 1536, 1024, 'Shaded threshold study', 'Threshold study — a deep, shaded entry.', false),
-      p('/images/generated/interior-earth-stair.webp', 960, 1440, 'Earth stair study', 'The stair rising to the terrace.', false),
-    ],
+    gallery: shots('varanasi-residence', [
+      [1672, 941, 'Varanasi Residence street elevation', 'Varanasi Residence, Uttar Pradesh.'],
+      [1316, 1195, 'Brick arches and jaali facade', 'Brick arches and jaalis, in the language of Varanasi.'],
+      [1983, 793, 'Courtyard with Nandi', 'A central court drawing air and daylight into the home.'],
+      [1983, 793, 'Shrine alcove', 'A shrine alcove beside a brick jaali.'],
+      [1983, 793, 'Terrace garden court', 'The terrace, an open garden court for gathering.'],
+    ]),
   },
   {
     slug: 'sthairya-farmhouse',
-    title: 'Sthairya Farmhouse',
+    title: 'Sthairya Farm House',
     category: 'Residential',
     location: 'Bangarpet, Karnataka',
-    year: '2024',
-    area: '420 m²',
+    year: '2026',
+    area: '8 acres (farm)',
     status: 'Completed',
-    cover: p('/images/sthairya.png', 600, 600, 'Sthairya Farmhouse, Bangarpet'),
+    cover: shots('sthairya-farmhouse', [[1672, 941, 'Sthairya Farmhouse', '']])[0],
     summary:
-      'The studio’s largest natural build to date — rammed earth walls, a filler-slab roof and water planned before anything else.',
+      'A home grown from the earth — shaped by permaculture, natural materials and a desire to live closer to the land.',
     brief:
-      'A working farm with a long-term plan to become the family’s primary home. The requirement was a building that could be extended in stages without looking unfinished at any point, and one that could survive a dry season on stored water.',
+      'A home within an 8-acre permaculture farm, envisioned by a couple from Bengaluru who wanted to step away from the city and live more closely with the land.\n\nThe brief was to create a natural, low-impact home that could become part of the farm — using materials and construction methods that felt honest to the landscape and suited to a slower way of living.',
     approach:
-      'The house sits along the contour rather than cutting across it, so the site’s own drainage was left largely intact. Rammed earth was viable here because the subsoil tested well — most of the wall material came out of the excavation for the water tank. Walls are 450mm, giving a thermal delay long enough that the interior peaks well after sunset. The roof is a filler slab that cuts concrete volume substantially while spanning the wider living spaces. Rainwater from the full roof area feeds a masonry tank sized to carry the household through the dry months.',
-    materials: ['Rammed earth, 450mm', 'Rubble stone plinth', 'Filler-slab roof', 'Lime plaster', 'Local granite'],
+      'The house was conceived as a home grown from the earth, using a palette of stone, cob and lime.\n\nA stone foundation laid in lime mortar anchors the house, while thick cob walls form the primary enclosure, bringing mass and thermal comfort to the interiors. Lime plaster finishes the walls, allowing the material beneath to remain breathable and tactile.\n\nAthangudi tiles bring colour and craft underfoot, while the roof combines limecrete and traditional Mangalore tiles. The architecture is deliberately rooted in its setting — simple, tactile and made to age with the farm.',
+    materials: ['Stone foundation', 'Lime mortar', 'Cob walls', 'Lime plaster', 'Athangudi tiles', 'Limecrete roof', 'Mangalore tile roof'],
     facts: [
-      { label: 'Plot', value: 'Working farm' },
-      { label: 'Built area', value: '420 m²' },
-      { label: 'Wall material', value: 'Excavated on site' },
-      { label: 'Water', value: 'Full-roof rainwater harvesting' },
+      { label: 'Farm', value: '8 acres' },
+      { label: 'Setting', value: 'Permaculture farm' },
+      { label: 'Wall system', value: 'Cob' },
+      { label: 'Foundation', value: 'Stone + lime mortar' },
+      { label: 'Roof', value: 'Limecrete + Mangalore tiles' },
+      { label: 'Material palette', value: 'Earth + stone + lime' },
     ],
-    gallery: [
-      p('/images/sthairya.png', 600, 600, 'Sthairya Farmhouse', 'Sthairya, Bangarpet.'),
-      p('/images/generated/project-rainwater-roof.webp', 1536, 1024, 'Rainwater roof study', 'The full roof area feeds a masonry tank.', false),
-      p('/images/generated/material-rammed-earth.webp', 1536, 1024, 'Rammed earth wall detail', 'Rammed earth, 450mm — the strata of each lift.', false),
-    ],
+    gallery: shots('sthairya-farmhouse', [
+      [1672, 941, 'Sthairya Farmhouse', 'Sthairya, Bangarpet.'],
+      [1536, 1024, 'Farmhouse beneath dramatic skies', 'The house under a big Karnataka sky.'],
+      [1672, 941, 'Farmhouse at golden hour', 'Golden hour across the farm.'],
+      [2400, 1350, 'Farmhouse across the fields', 'The house seen across the farm.'],
+      [1087, 1447, 'Terracotta porch', 'Terracotta porch under a timber-rafter roof.'],
+      [1087, 1447, 'Veranda', 'The veranda, edged by the garden.'],
+      [1086, 1448, 'Garden porch', 'A porch to sit out in the garden.'],
+      [1086, 1448, 'House from the driveway', 'The two-storey house from the drive.'],
+      [1086, 1448, 'Patterned-tile living room', 'Patterned floor tiles in the main room.'],
+      [1087, 1446, 'Teal tile room', 'Teal patterned tile against lime plaster.'],
+      [1086, 1448, 'Room with garden door', 'Light from the garden through the glazed door.'],
+    ]),
   },
   {
     slug: 'mysore-residence',
     title: 'Mysore Residence',
     category: 'Residential',
     location: 'Mysuru, Karnataka',
-    year: '2025',
-    area: '210 m²',
-    status: 'Completed',
-    cover: p('/images/Mysore.png', 605, 605, 'Mysore Residence, Mysuru'),
-    summary: 'A family home for three generations, planned so each has somewhere to be alone.',
+    year: '2023',
+    area: '2,000 sq ft',
+    status: 'Proposed',
+    cover: shots('mysore-residence', [[2400, 1074, 'Mysore Residence at golden hour', '']])[0],
+    summary:
+      'A compact duplex shaped by levels and light — where a lowered car park becomes a shaded gathering court, and clay screens soften the edge between home and street.',
     brief:
-      'Grandparents, a couple and two children under one roof. The brief was less about square footage than about acoustic and visual separation — a house where a phone call, a nap and homework can happen at the same time without anyone moving outdoors.',
+      'A duplex residence planned on a 1,200 sq ft urban plot, with the challenge of accommodating parking, living spaces and moments of openness within a compact footprint.\n\nThe design sought to create a home that felt private yet connected, while making the most of the site’s level difference.',
     approach:
-      'Bedrooms are distributed across two levels with the shared spaces between them, and the grandparents’ room sits at ground level with its own access to the garden. Wall thickness and a break in the floor structure keep sound from carrying between levels. A verandah on the east gives the household a place to sit before the day gets hot.',
-    materials: ['Compressed stabilised earth blocks', 'Lime plaster', 'Oxide flooring', 'Reclaimed timber joinery'],
+      'The stilt level is lowered to accommodate parking, creating an informal gathering space tucked beneath the house — a shaded threshold between the street and the home.\n\nAbove, the residence unfolds across two levels, with carefully placed openings bringing in light and air while maintaining privacy.\n\nA clay jaali veil wraps portions of the façade, filtering sunlight and views while giving the house a tactile, warm character.\n\nThe architecture uses level, shade and filtered light to turn a compact urban plot into a layered home with spaces to gather, pause and retreat.',
+    materials: ['Clay jaali', 'Exposed clay / terracotta elements', 'Concrete', 'Natural stone flooring', 'Timber'],
     facts: [
-      { label: 'Occupants', value: 'Three generations' },
-      { label: 'Built area', value: '210 m²' },
-      { label: 'Walls', value: 'Stabilised earth block' },
-      { label: 'Levels', value: 'Two' },
+      { label: 'Plot', value: '1,200 sq ft' },
+      { label: 'Built area', value: '2,000 sq ft' },
+      { label: 'Type', value: 'Duplex residence' },
+      { label: 'Parking', value: 'Stilt + lower-level parking' },
+      { label: 'Gathering', value: 'Informal shaded court' },
+      { label: 'Façade', value: 'Clay jaali screen' },
+      { label: 'Levels', value: 'Two-storey residence' },
+      { label: 'Status', value: 'Proposed' },
     ],
-    gallery: [
-      p('/images/Mysore.png', 605, 605, 'Mysore Residence', 'Mysore Residence, Mysuru.'),
-      p('/images/generated/interior-timber-family-space.webp', 960, 1440, 'Shared family space study', 'The shared space, held between the two bedroom levels.', false),
-      p('/images/generated/interior-lime-living-room.webp', 1536, 1024, 'Lime plastered living room study', 'Lime plaster, left to read as a surface.', false),
-    ],
+    gallery: shots('mysore-residence', [
+      [2400, 1074, 'Mysore Residence at golden hour', 'Mysore Residence, Mysuru.'],
+      [1730, 909, 'House in its garden', 'The house within its garden.'],
+      [1731, 908, 'Living room', 'The living room, open to the garden.'],
+      [1996, 788, 'Arched garden window', 'An arched window onto the garden.'],
+      [1996, 788, 'Earth-toned interior', 'Earth tones, in sunlight.'],
+      [1996, 788, 'Reading nook', 'A reading nook.'],
+    ]),
   },
   {
     slug: 'kenneth-residence',
@@ -207,24 +240,6 @@ export const projects = [
 /* Additional design-study imagery per project, appended to each gallery so the
    horizontal track has real depth. Swap these out as site photography arrives. */
 const EXTRA = {
-  'thendral-ecr-farmhouse': [
-    p('/images/generated/project-long-veranda.webp', 1774, 887, 'Long verandah', 'The verandah, sized for twenty people or two.', false),
-    p('/images/generated/craft-rubble-plinth.webp', 1536, 1024, 'Rubble stone plinth', 'Rubble plinth — the first defence against coastal damp.', false),
-    p('/images/generated/interior-lime-bathroom.webp', 1402, 1122, 'Lime finished bathroom', 'Lime, which tolerates salt air better than paint.', false),
-  ],
-  'varanasi-residence': [
-    p('/images/generated/project-urban-bengaluru.webp', 960, 1440, 'Narrow urban elevation', 'A single open face on a tight urban plot.', false),
-    p('/images/generated/craft-timber-rafters.webp', 1536, 1024, 'Timber rafters', 'Timber joinery, detailed from the older houses nearby.', false),
-  ],
-  'sthairya-farmhouse': [
-    p('/images/generated/project-western-ghats.webp', 1536, 1024, 'House along the contour', 'The house sits along the contour, not across it.', false),
-    p('/images/generated/landscape-dry-native-garden.webp', 1536, 1024, 'Dry native planting', 'Planting chosen to survive the dry months.', false),
-    p('/images/generated/craft-rammed-earth.webp', 1536, 1024, 'Ramming earth into formwork', 'Earth compacted in shallow lifts between forms.', false),
-  ],
-  'mysore-residence': [
-    p('/images/generated/project-tamarind-house.webp', 1536, 1024, 'East verandah', 'The east verandah, used before the day gets hot.', false),
-    p('/images/generated/interior-kota-kitchen.webp', 1536, 1024, 'Kitchen', 'Shared spaces sit between the two bedroom levels.', false),
-  ],
   'kenneth-residence': [
     p('/images/generated/project-coimbatore-court.webp', 1402, 1122, 'Inward-turning court', 'The plan turns inward, away from the road.', false),
     p('/images/generated/craft-bamboo-screen.webp', 1536, 1024, 'Bamboo screen', 'A screen filtering light without opening a view in.', false),
