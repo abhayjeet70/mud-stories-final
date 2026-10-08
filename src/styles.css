@@ -763,9 +763,8 @@ h1, h2, h3, h4 {
   width: 100%;
   margin: 0 0 10px;
 }
-.bleed .ph { width: 100%; }
-/* Source photo is 4:3, so bias the crop upward to keep faces in frame. */
-.bleed .ph img { object-position: center 30%; }
+/* Show the whole photo, sized to fit the window instead of the full width. */
+.bleed .ph { width: min(100%, calc(85svh * 762 / 597)); margin: 0 auto; }
 
 .quad {
   display: grid;
