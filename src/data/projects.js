@@ -154,104 +154,14 @@ export const projects = [
       [1996, 788, 'Reading nook', 'A reading nook.'],
     ]),
   },
-  {
-    slug: 'kenneth-residence',
-    title: 'Mr. Kenneth Residence',
-    category: 'Residential',
-    location: 'Kammanahalli, Bengaluru',
-    year: '2023',
-    area: '250 m²',
-    status: 'Completed',
-    cover: p('/images/kenneth.png', 602, 602, 'Mr. Kenneth Residence, Kammanahalli, Bengaluru'),
-    summary: 'Natural materials on a dense city plot, with noise and privacy setting the plan as much as light.',
-    brief:
-      'An urban site on a busy road, overlooked on two sides. The client had seen natural building in rural settings and wanted to know whether it could work in the middle of Bengaluru.',
-    approach:
-      'It can, and the reasons turned out to be acoustic as much as thermal — a thick earthen wall is a significantly better sound barrier than a 230mm brick one. The plan turns inward, with the main living space opening onto a small planted court rather than the street. Street-facing openings are high and narrow, admitting light without a view in. A green roof over the rear block cuts both heat gain and the noise from an adjacent building’s plant.',
-    materials: ['Stabilised earth block', 'Lime plaster', 'Green roof', 'Local stone paving'],
-    facts: [
-      { label: 'Context', value: 'Dense urban, arterial road' },
-      { label: 'Built area', value: '250 m²' },
-      { label: 'Key gain', value: 'Acoustic mass' },
-      { label: 'Roof', value: 'Planted over rear block' },
-    ],
-    gallery: [
-      p('/images/kenneth.png', 602, 602, 'Mr. Kenneth Residence', 'Kammanahalli, Bengaluru.'),
-      p('/images/generated/interior-adobe-study.webp', 960, 1440, 'Adobe study room', 'High, narrow openings — light without a view in.', false),
-      p('/images/generated/landscape-rain-garden.webp', 1536, 1024, 'Planted court study', 'The planted court the living space turns towards.', false),
-    ],
-  },
-  {
-    slug: 'logesh-residence-interiors',
-    title: 'Mr. Logesh Residence Interiors',
-    category: 'Interiors',
-    location: 'Tirupur, Tamil Nadu',
-    year: '2024',
-    area: '150 m²',
-    status: 'Completed',
-    cover: p('/images/Logesh.png', 600, 603, 'Mr. Logesh Residence interiors, Tirupur'),
-    summary: 'Interiors for a completed house, drawing on the textile trade the city is built on.',
-    brief:
-      'A finished shell in a city known nationally for its knitwear industry. The client wanted interiors that referred to that heritage without turning the house into a display of it.',
-    approach:
-      'The reference is in the surfaces rather than in ornament. Woven textures appear in screens, cane inserts and the run of a plastered wall; the palette is drawn from undyed and naturally dyed cloth. Loose furniture was made locally to our drawings. Because the building was already complete, everything had to work within existing openings and service runs — which shaped the storage strategy more than any aesthetic decision did.',
-    materials: ['Clay plaster', 'Cane and rattan', 'Naturally dyed textiles', 'Locally made furniture'],
-    facts: [
-      { label: 'Scope', value: 'Interiors only' },
-      { label: 'Area', value: '150 m²' },
-      { label: 'Furniture', value: 'Custom, locally fabricated' },
-      { label: 'Constraint', value: 'Completed shell' },
-    ],
-    gallery: [
-      p('/images/Logesh.png', 600, 603, 'Logesh Residence interiors', 'Tirupur, Tamil Nadu.'),
-      p('/images/interior.png', 593, 595, 'Interior detail', 'Woven texture, carried into the surfaces.'),
-      p('/images/generated/interior-clay-bedroom.webp', 1536, 1024, 'Clay plaster bedroom study', 'Clay plaster, in the palette of undyed cloth.', false),
-    ],
-  },
-  {
-    slug: 'vidya-backyard-landscape',
-    title: 'Mrs. Vidya Backyard Landscape',
-    category: 'Landscape',
-    location: 'Bengaluru, Karnataka',
-    year: '2025',
-    area: '120 m²',
-    status: 'Completed',
-    cover: p('/images/Vidya.png', 602, 605, 'Mrs. Vidya backyard landscape, Bengaluru'),
-    summary: 'A small backyard turned into a usable room, planted to get through summer on stored rain.',
-    brief:
-      'An unused rear yard behind a city house — compacted, hot for most of the afternoon and looked at rather than used.',
-    approach:
-      'Work began below ground. Compacted soil was broken up and amended, and a percolation pit was put in to take roof runoff instead of sending it to the drain. A single well-placed tree and a light pergola brought the afternoon into shade, which made everything planted beneath it viable. Paving is brick-on-edge and gravel so water passes through. Planting is layered and almost entirely native, with a small kitchen bed by the door.',
-    materials: ['Brick-on-edge paving', 'Gravel', 'Percolation pit', 'Native layered planting'],
-    facts: [
-      { label: 'Area', value: '120 m²' },
-      { label: 'Water', value: 'Roof runoff to percolation' },
-      { label: 'Paving', value: 'Fully permeable' },
-      { label: 'Planting', value: 'Predominantly native' },
-    ],
-    gallery: [
-      p('/images/Vidya.png', 602, 605, 'Vidya backyard landscape', 'Bengaluru, Karnataka.'),
-      p('/images/landscape.webp', 598, 596, 'Planted backyard', 'Layered, almost entirely native planting.'),
-      p('/images/generated/landscape-kitchen-garden.webp', 1537, 1023, 'Kitchen garden study', 'A small kitchen bed, by the door.', false),
-    ],
-  },
+
+
+
 ];
 
 /* Additional design-study imagery per project, appended to each gallery so the
    horizontal track has real depth. Swap these out as site photography arrives. */
 const EXTRA = {
-  'kenneth-residence': [
-    p('/images/generated/project-coimbatore-court.webp', 1402, 1122, 'Inward-turning court', 'The plan turns inward, away from the road.', false),
-    p('/images/generated/craft-bamboo-screen.webp', 1536, 1024, 'Bamboo screen', 'A screen filtering light without opening a view in.', false),
-  ],
-  'logesh-residence-interiors': [
-    p('/images/generated/project-adobe-retreat.webp', 1536, 1024, 'Textured wall surface', 'Woven texture carried into the run of a plastered wall.', false),
-    p('/images/generated/project-kerala-extension.webp', 1536, 1024, 'Cane and rattan detail', 'Cane inserts, made locally to our drawings.', false),
-  ],
-  'vidya-backyard-landscape': [
-    p('/images/generated/landscape-neem-courtyard.webp', 1536, 1024, 'Shaded courtyard planting', 'One well-placed tree brought the afternoon into shade.', false),
-    p('/images/generated/landscape-rain-garden.webp', 1536, 1024, 'Permeable paving and rain garden', 'Brick-on-edge and gravel, so water passes through.', false),
-  ],
 };
 
 for (const project of projects) {

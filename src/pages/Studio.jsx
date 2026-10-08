@@ -40,7 +40,7 @@ export default function Studio() {
         </div>
 
         <Reveal className="bleed">
-          <Picture img={aboutMedia} priority sizes="100vw" ratio="16 / 9" />
+          <Picture img={aboutMedia} priority sizes="100vw" />
         </Reveal>
 
         <div className="wide section--tight">
