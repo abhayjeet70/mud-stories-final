@@ -34,7 +34,7 @@ export default function Home() {
               alt={p.cover.alt}
               width={p.cover.w}
               height={p.cover.h}
-              loading={n === 0 ? 'eager' : 'lazy'}
+              loading="eager"
               fetchPriority={n === 0 ? 'high' : 'auto'}
               decoding={n === 0 ? 'sync' : 'async'}
             />

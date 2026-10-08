@@ -54,14 +54,14 @@ export default function Work() {
             key={s.slug + s.img.src + n}
             aria-hidden={n !== index}
           >
-            {/* Only the current slide and its neighbours are worth fetching. */}
-            {Math.abs(n - index) <= 1 || n === 0 ? (
+            {/* Fetch the current slide and two ahead/behind so the next one is ready. */}
+            {Math.abs(n - index) <= 2 || n === 0 ? (
               <img
                 src={s.img.src}
                 alt={s.img.alt}
                 width={s.img.w}
                 height={s.img.h}
-                loading={n === 0 ? 'eager' : 'lazy'}
+                loading="eager"
                 fetchPriority={n === 0 ? 'high' : 'auto'}
                 decoding={n === 0 ? 'sync' : 'async'}
               />
